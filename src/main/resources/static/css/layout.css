@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    background: #f4ecdc; /* Beige claro */
+    font-family: 'Poppins', sans-serif;
+}
+
+.layout-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 280px;
+    background: #0f7a75; /* verde teal fuerte */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 20px;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: 3px solid white;
+    object-fit: cover;
+}
+
+.profile h3 {
+    font-size: 18px;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.profile span {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* MENU */
+.menu {
+    flex-grow: 1;
+}
+
+.menu .item {
+    display: block;
+    padding: 12px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.menu .item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.menu .active {
+    background: #1db6af; /* color claro como en la imagen */
+    font-weight: 600;
+}
+
+/* LOGOUT */
+.logout {
+    margin-top: auto;
+}
+
+.logout a {
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+    opacity: 0.8;
+    display: block;
+    padding: 10px;
+}
+
+.logout a:hover {
+    opacity: 1;
+}
+
+/* ========== CONTENIDO DINÁMICO ========== */
+.content {
+    flex-grow: 1;
+    padding: 40px;
+}
