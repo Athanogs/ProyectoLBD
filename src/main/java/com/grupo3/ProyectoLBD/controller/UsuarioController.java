@@ -13,6 +13,7 @@ import com.grupo3.ProyectoLBD.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class UsuarioController {
                     .findByNombreContainingIgnoreCaseOrApellidoPaternoContainingIgnoreCaseOrApellidoMaternoContainingIgnoreCase(
                             nombre, nombre, nombre);
         } else {
-            lista = personaViewRepo.findAll();
+            lista = personaViewRepo.findbyIdEstado();
         }
         model.addAttribute("listaUsuarios", lista);
         model.addAttribute("cedula", cedula);
@@ -173,5 +174,17 @@ public class UsuarioController {
             model.addAttribute("modoEdicion", true);
             return "usuarios/form";
         }
+    }
+
+    @GetMapping("/eliminar/{cedula}")
+    public String eliminarUsuario(@PathVariable("cedula") Long cedula,
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            usuarioService.eliminarPersonaPorCedula(cedula);
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario eliminado (estado = 2).");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "No se pudo eliminar: " + e.getMessage());
+        }
+        return "redirect:/usuarios";
     }
 }

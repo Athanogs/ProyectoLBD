@@ -13,6 +13,7 @@ public class PersonaForm {
     private String contrasena;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
+
     private Integer idRol;
     private Integer idPais;
     private Integer idProvincia;
@@ -20,8 +21,6 @@ public class PersonaForm {
     private Integer idDistrito;
     private String otrasSenas;
     private Integer idEstado;
-
-
 
     //getters y setters
     public String getCedula() {

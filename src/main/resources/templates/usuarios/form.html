@@ -41,12 +41,22 @@
     <div class="card shadow">
         <div class="card-body">
 
+            <p th:text="'DEBUG: PAIS=' + *{idPais} + 
+            ', PROV=' + *{idProvincia} + 
+            ', CANT=' + *{idCanton} + 
+            ', DIST=' + *{idDistrito}"></p>
+
 
             <p th:text="'DEBUG CONTRA: ' + *{contrasena}"></p>
 
             <form th:action="${modoEdicion} ? @{/usuarios/actualizar} : @{/usuarios/guardar}"
                 th:object="${personaForm}" method="post">
 
+
+                <p th:text="'DEBUG: PAIS=' + ${personaForm.idPais} +
+                ', PROV=' + ${personaForm.idProvincia} + 
+                ', CANT=' + ${personaForm.idCanton} + 
+                ', DIST=' + ${personaForm.idDistrito}"></p>
                 <!-- FILA 1 -->
                 <div class="row mb-3">
                     <div class="col-md-4">

@@ -16,6 +16,7 @@ public class UsuarioService {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcCall createPersonaFullCall;
     private final SimpleJdbcCall updatePersonaFullCall;
+    private final SimpleJdbcCall deletePersonaCall;
 
     public UsuarioService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -27,6 +28,10 @@ public class UsuarioService {
         this.updatePersonaFullCall = new SimpleJdbcCall(this.jdbcTemplate)
                 .withCatalogName("FIDE_PROYECTO_LBD_PCK")
                 .withProcedureName("FIDE_UPDATE_PERSONA_FULL_SP");
+
+        this.deletePersonaCall = new SimpleJdbcCall(this.jdbcTemplate)
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withProcedureName("FIDE_PERSONA_DELETE_SP");
     }
 
     // ------------------ CREAR ------------------
@@ -39,6 +44,13 @@ public class UsuarioService {
     public void actualizarPersonaCompleta(PersonaForm form) {
         Map<String, Object> params = buildParams(form, true);
         updatePersonaFullCall.execute(params);
+    }
+
+    // ------------------ ELIMINAR (ID_ESTADO = 2) ------------------
+    public void eliminarPersonaPorCedula(Long cedula) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("P_CEDULA", cedula);   // el parámetro del SP
+        deletePersonaCall.execute(params);
     }
 
     /**
