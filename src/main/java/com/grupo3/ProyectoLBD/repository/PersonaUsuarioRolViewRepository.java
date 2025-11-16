@@ -7,15 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PersonaUsuarioRolViewRepository extends JpaRepository<PersonaUsuarioRolView, String> {
+public interface PersonaUsuarioRolViewRepository extends JpaRepository<PersonaUsuarioRolView, Long> {
 
-    // Buscar por cédula exacta
-    List<PersonaUsuarioRolView> findByCedula(String cedula);
+    List<PersonaUsuarioRolView> findByCedula(Long cedula);
 
-    // Buscar por nombre o apellidos (contiene, ignore case)
     List<PersonaUsuarioRolView> findByNombreContainingIgnoreCaseOrApellidoPaternoContainingIgnoreCaseOrApellidoMaternoContainingIgnoreCase(
-            String nombre,
-            String apellidoPaterno,
-            String apellidoMaterno
-    );
+            String nombre, String apellidoPaterno, String apellidoMaterno);
 }

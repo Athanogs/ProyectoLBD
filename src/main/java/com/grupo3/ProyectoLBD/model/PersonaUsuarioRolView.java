@@ -9,7 +9,7 @@ public class PersonaUsuarioRolView {
 
     @Id
     @Column(name = "CEDULA")
-    private String cedula;  
+    private Long cedula;
 
     @Column(name = "NOMBRE")
     private String nombre;
@@ -21,7 +21,7 @@ public class PersonaUsuarioRolView {
     private String apellidoMaterno;
 
     @Column(name = "FECHA_NACIMIENTO")
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaNacimiento;   
 
     @Column(name = "USERNAME")
     private String username;
@@ -32,72 +32,70 @@ public class PersonaUsuarioRolView {
     @Column(name = "ROL")
     private String rol;
 
-    // Constructor vacío obligatorio para JPA
-    public PersonaUsuarioRolView() {
-    }
+    @Column(name = "ID_ROL")
+    private Integer idRol;
 
-    // Getters y setters
-    public String getCedula() {
-        return cedula;
-    }
+    @Column(name = "ID_PAIS")
+    private Integer idPais;
 
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
+    @Column(name = "ID_PROVINCIA")
+    private Integer idProvincia;
 
-    public String getNombre() {
-        return nombre;
-    }
+    @Column(name = "ID_CANTON")
+    private Integer idCanton;
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    @Column(name = "ID_DISTRITO")
+    private Integer idDistrito;
 
-    public String getApellidoPaterno() {
-        return apellidoPaterno;
-    }
+    @Column(name = "OTRAS_SENAS")
+    private String otrasSenas;
 
-    public void setApellidoPaterno(String apellidoPaterno) {
-        this.apellidoPaterno = apellidoPaterno;
-    }
+    @Column(name = "ID_ESTADO")
+    private Integer idEstado;
 
-    public String getApellidoMaterno() {
-        return apellidoMaterno;
-    }
+    //Getters y setters
+    public Long getCedula() { return cedula; }
+    public void setCedula(Long cedula) { this.cedula = cedula; }
 
-    public void setApellidoMaterno(String apellidoMaterno) {
-        this.apellidoMaterno = apellidoMaterno;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
+    public String getApellidoPaterno() { return apellidoPaterno; }
+    public void setApellidoPaterno(String apellidoPaterno) { this.apellidoPaterno = apellidoPaterno; }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+    public String getApellidoMaterno() { return apellidoMaterno; }
+    public void setApellidoMaterno(String apellidoMaterno) { this.apellidoMaterno = apellidoMaterno; }
 
-    public String getUsername() {
-        return username;
-    }
+    public LocalDate getFechaNacimiento() { return fechaNacimiento; }
+    public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getContrasena() {
-        return contrasena;
-    }
+    public String getContrasena() { return contrasena; }
+    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 
-    public String getRol() {
-        return rol;
-    }
+    public Integer getIdRol() { return idRol; }
+    public void setIdRol(Integer idRol) { this.idRol = idRol; }
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    public Integer getIdPais() { return idPais; }
+    public void setIdPais(Integer idPais) { this.idPais = idPais; }
+
+    public Integer getIdProvincia() { return idProvincia; }
+    public void setIdProvincia(Integer idProvincia) { this.idProvincia = idProvincia; }
+
+    public Integer getIdCanton() { return idCanton; }
+    public void setIdCanton(Integer idCanton) { this.idCanton = idCanton; }
+
+    public Integer getIdDistrito() { return idDistrito; }
+    public void setIdDistrito(Integer idDistrito) { this.idDistrito = idDistrito; }
+
+    public String getOtrasSenas() { return otrasSenas; }
+    public void setOtrasSenas(String otrasSenas) { this.otrasSenas = otrasSenas; }
+
+    public Integer getIdEstado() { return idEstado; }
+    public void setIdEstado(Integer idEstado) { this.idEstado = idEstado; }
 }
