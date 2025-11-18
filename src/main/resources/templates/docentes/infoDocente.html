@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Docente</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4ecdc; /* Fondo solicitado */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+
+    <div class="position-relative">
+        <!-- Botón Volver -->
+        <a href="/docentes" class="btn btn-secondary mb-4">
+            ← Volver
+        </a>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h1 class="h3 mb-3 text-center">Información del Docente</h1>
+
+            <!-- Título con el nombre del docente -->
+            <h4 class="mb-4 text-center"
+                th:text="'Información del docente: ' 
+                          + ${personaForm.nombre} + ' ' 
+                          + ${personaForm.apellidoPaterno} + ' ' 
+                          + ${personaForm.apellidoMaterno}">
+            </h4>
+
+            <hr/>
+
+            <!-- Formulario para agregar formación académica -->
+            <h5 class="mt-3 mb-3">Añadir formación académica</h5>
+
+            <form class="row g-2 align-items-end mb-4"
+                  th:action="@{/docentes/agregarFormacion}" method="post">
+
+                <!-- Cedula oculta del docente -->
+                <input type="hidden" name="cedula" th:value="${personaForm.cedula}"/>
+
+                <div class="col-md-4">
+                    <label for="titulo" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="titulo" name="titulo"
+                           placeholder="Ej: Licenciatura en Educación" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="idInstitucion" class="form-label">Institución</label>
+                    <select class="form-select" id="idInstitucion" name="idInstitucion" required>
+                        <option value="">-- Seleccione una institución --</option>
+                        <option th:each="inst : ${listaInstituciones}"
+                                th:value="${inst.idInstitucion}"
+                                th:text="${inst.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="fechaObtencion" class="form-label">Fecha de obtención</label>
+                    <input type="date" class="form-control" id="fechaObtencion" name="fechaObtencion" required>
+                </div>
+
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Añadir
+                    </button>
+                </div>
+            </form>
+
+            <!-- Tabla de formación académica -->
+            <h5 class="mb-3">Formación académica</h5>
+
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Título</th>
+                    <th>Institución</th>
+                    <th>Categoría</th>
+                    <th>Fecha de obtención</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Si no hay registros -->
+                <tr th:if="${#lists.isEmpty(listaFormaciones)}">
+                    <td colspan="6" class="text-center">
+                        No hay formación académica registrada para este docente.
+                    </td>
+                </tr>
+
+                <!-- Si hay registros -->
+                <tr th:each="f : ${listaFormaciones}">
+                    <td th:text="${f.titulo}"></td>
+                    <td th:text="${f.institucion}"></td>
+                    <td th:text="${f.categoria}"></td>
+                    <td th:text="${#temporals.format(f.fechaObtencion, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${f.estado}"></td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-danger"
+                           th:href="@{/docentes/eliminarFormacion(cedula=${f.cedula}, idFormacion=${f.idFormacion})}"
+                           onclick="return confirm('¿Está seguro de eliminar esta formación académica?');">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <h5 class="mt-4 mb-3">Añadir capacitación</h5>
+
+            <!---Formulario Capacitacion-->
+            <form class="row g-2 align-items-end mb-4"
+                th:action="@{/docentes/agregarCapacitacion}" method="post">
+
+                <!-- Cedula oculta del docente -->
+                <input type="hidden" name="cedula" th:value="${personaForm.cedula}"/>
+
+                <div class="col-md-4">
+                    <label for="tema" class="form-label">Tema</label>
+                    <input type="text" class="form-control" id="tema" name="tema"
+                        placeholder="Ej: Evaluación del aprendizaje" required>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="idProveedor" class="form-label">Proveedor</label>
+                    <select class="form-select" id="idProveedor" name="idProveedor" required>
+                        <option value="">-- Seleccione un proveedor --</option>
+                        <option th:each="prov : ${listaProveedores}"
+                                th:value="${prov.idProveedor}"
+                                th:text="${prov.descripcion}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="anio" class="form-label">Año</label>
+                    <input type="number" class="form-control" id="anio" name="anio"
+                        min="1900" max="2100" placeholder="2024" required>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="horas" class="form-label">Horas</label>
+                    <input type="number" class="form-control" id="horas" name="horas"
+                        min="1" placeholder="Ej: 20" required>
+                </div>
+
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        Añadir
+                    </button>
+                </div>
+            </form>
+
+            <h5 class="mb-3">Capacitaciones</h5>
+
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Tema</th>
+                    <th>Proveedor</th>
+                    <th>Año</th>
+                    <th>Horas</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Si no hay registros -->
+                <tr th:if="${#lists.isEmpty(listaCapacitaciones)}">
+                    <td colspan="6" class="text-center">
+                        No hay capacitaciones registradas para este docente.
+                    </td>
+                </tr>
+
+                <!-- Si hay registros -->
+                <tr th:each="c : ${listaCapacitaciones}">
+                    <td th:text="${c.tema}"></td>
+                    <td th:text="${c.proveedor}"></td>
+                    <td th:text="${c.anio}"></td>
+                    <td th:text="${c.horas}"></td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-danger"
+                           th:href="@{/docentes/eliminarCapacitacion(
+                                        cedula=${c.cedula},
+                                        idTema=${c.idTema},
+                                        idProveedor=${c.idProveedor},
+                                        anio=${c.anio})}"
+                           onclick="return confirm('¿Está seguro de eliminar esta capacitación?');">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div> 
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
