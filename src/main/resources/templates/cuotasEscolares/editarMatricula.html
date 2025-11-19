@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head('Editar Matrícula')"></head>
+
+<body>
+
+    <div class="layout-container">
+
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <main class="content">
+            <a href="/matriculas" class="btn btn-secondary mb-3">← Volver</a>
+
+            <h1 class="mb-4">Editar Matrícula</h1>
+
+            <!-- Mensaje de validación / error / éxito -->
+            <div th:if="${mensaje}" class="alert" th:classappend="' alert-' + ${mensajeTipo}" role="alert">
+                <span th:text="${mensaje}"></span>
+            </div>
+
+
+            <div class="card p-4" style="max-width: 600px;">
+
+                <form th:action="@{'/matriculas/actualizar/' + ${m.idMatricula}}" method="post">
+
+                    <!-- ID (solo lectura) -->
+                    <div class="mb-3">
+                        <label class="form-label">ID Matrícula</label>
+                        <input type="text" class="form-control" th:value="${m.idMatricula}" readonly>
+                    </div>
+
+                    <!-- Cédula Apoderado -->
+                    <div class="mb-3">
+                        <label class="form-label">Cédula del Apoderado</label>
+                        <input type="text" class="form-control" th:value="${m.cedulaApoderado}" readonly>
+                    </div>
+
+                    <!-- Cédula Infante -->
+                    <div class="mb-3">
+                        <label class="form-label">Cédula del Infante</label>
+                        <input type="text" class="form-control" th:value="${m.cedulaInfante}" readonly>
+                    </div>
+
+                    <!-- Fecha Matrícula -->
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Matrícula</label>
+                        <input type="date" class="form-control" name="fechaMatricula" th:value="${m.fechaMatricula}">
+                    </div>
+
+                    <!-- Factura -->
+                    <div class="mb-3">
+                        <label class="form-label">ID Factura Asociada</label>
+                        <input type="number" class="form-control" name="idFactura" th:value="${m.idFactura}">
+                    </div>
+
+                    <!-- Estado -->
+                    <div class="mb-3">
+                        <label class="form-label">Estado Matrícula</label>
+                        <select class="form-control" name="idEstado">
+                            <option value="1" th:selected="${m.estadoMatricula == 'ACTIVO'}">ACTIVO</option>
+                            <option value="6" th:selected="${m.estadoMatricula == 'PENDIENTE'}">PENDIENTE</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="/matriculas" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+
+</html>
