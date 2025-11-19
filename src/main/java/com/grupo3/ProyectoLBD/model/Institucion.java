@@ -18,9 +18,6 @@ public class Institucion {
 
     @Column(name = "ID_ESTADO")
     private String idEstado;
-    // Si tienes más columnas, las agregás luego:
-    // @Column(name = "ID_CATEGORIA")
-    // private Integer idCategoria;
 
     // Getters y setters
     public Long getIdInstitucion() {

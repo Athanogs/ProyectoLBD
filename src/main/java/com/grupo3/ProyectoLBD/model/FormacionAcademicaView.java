@@ -33,7 +33,6 @@ public class FormacionAcademicaView {
     private String estado;
 
     // Getters y setters
-
     public Long getIdFormacion() {
         return idFormacion;
     }

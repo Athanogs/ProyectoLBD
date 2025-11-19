@@ -1,5 +1,6 @@
 package com.grupo3.ProyectoLBD.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.grupo3.ProyectoLBD.model.*;
 import com.grupo3.ProyectoLBD.repository.*;
 import com.grupo3.ProyectoLBD.service.FormacionAcademicaService;
 import com.grupo3.ProyectoLBD.service.CapacitacionService;
+import com.grupo3.ProyectoLBD.service.EvaluacionDocenteService;
 import com.grupo3.ProyectoLBD.service.ExperienciaLaboralService;
 
 @Controller
@@ -27,9 +29,12 @@ public class DocentesController {
     private final FormacionAcademicaService formacionService;
     private final CapacitacionService capacitacionService;
 
-    private final ExperienciaLaboralViewRepository experienciaRepo;   // 👈 experiencia laboral (vista)
-    private final CargoRepository cargoRepo;                          // 👈 para el combo de cargos
-    private final ExperienciaLaboralService experienciaService;       // 👈 service que llama al SP AUTO
+    private final ExperienciaLaboralViewRepository experienciaRepo;   
+    private final CargoRepository cargoRepo;                          
+    private final ExperienciaLaboralService experienciaService;      
+    private final EvaluacionDocenteService evaluacionDocenteService;  
+
+    private final TipoEvaluacionRepository tipoEvaluacionRepo;        
 
     public DocentesController(PersonaUsuarioRolViewRepository personaViewRepo,
                               FormacionAcademicaViewRepository formacionRepo,
@@ -40,7 +45,9 @@ public class DocentesController {
                               CapacitacionService capacitacionService,
                               CargoRepository cargoRepo,
                               ExperienciaLaboralViewRepository experienciaRepo,
-                              ExperienciaLaboralService experienciaService) {
+                              ExperienciaLaboralService experienciaService,
+                              EvaluacionDocenteService evaluacionDocenteService,
+                              TipoEvaluacionRepository tipoEvaluacionRepo) {
 
         this.personaViewRepo = personaViewRepo;
         this.formacionRepo = formacionRepo;
@@ -53,6 +60,9 @@ public class DocentesController {
         this.cargoRepo = cargoRepo;
         this.experienciaRepo = experienciaRepo;
         this.experienciaService = experienciaService;
+        this.evaluacionDocenteService = evaluacionDocenteService;
+
+        this.tipoEvaluacionRepo = tipoEvaluacionRepo;
     }
 
     // LISTAR DOCENTES
@@ -79,7 +89,7 @@ public class DocentesController {
         return "docentes";
     }
 
-    // VER DETALLE DE UN DOCENTE (formación + capacitación + experiencia)
+    // VER DETALLE DE UN DOCENTE 
     @GetMapping("/ver/{cedula}")
     public String editarUsuarioForm(@PathVariable("cedula") Long cedula, Model model) {
 
@@ -97,22 +107,27 @@ public class DocentesController {
         form.setApellidoMaterno(v.getApellidoMaterno());
         form.setIdEstado(v.getIdEstado() == null ? 1 : v.getIdEstado());
 
-        // Formación académica (solo activas)
+        //Formación académica 
         List<FormacionAcademicaView> formaciones =
                 formacionRepo.findByCedulaAndIdEstado(cedula, 1);
 
-        // Capacitaciones (solo activas)
+        //Capacitaciones
         List<CapacitacionView> capacitaciones =
                 capacitacionRepo.findByCedulaAndIdEstado(cedula, 1);
 
-        // Experiencia laboral (solo activa)
+        //Experiencia laboral 
         List<ExperienciaLaboralView> experiencias =
                 experienciaRepo.findByCedulaAndIdEstado(cedula, 1);
 
-        // Catálogos para combos
+        //Evaluaciones del docente 
+        List<EvaluacionDocenteView> evaluaciones =
+                evaluacionDocenteService.obtenerEvaluacionesPorDocente(cedula);
+
+        //Catálogos 
         List<Institucion> listaInstituciones = institucionRepo.findAll();
         List<Proveedor> listaProveedores = proveedorRepo.findAll();
         List<Cargo> listaCargos = cargoRepo.findAll();
+        List<TipoEvaluacion> listaTiposEvaluacion = tipoEvaluacionRepo.findAll();
 
         model.addAttribute("personaForm", form);
         model.addAttribute("modoEdicion", true);
@@ -126,12 +141,14 @@ public class DocentesController {
         model.addAttribute("listaExperiencias", experiencias);
         model.addAttribute("listaCargos", listaCargos);
 
+        model.addAttribute("listaTiposEvaluacion", listaTiposEvaluacion);
+
+        model.addAttribute("listaEvaluaciones", evaluaciones);
+
         return "docentes/infoDocente";
     }
 
-    // -------------------------
     //   FORMACIÓN ACADÉMICA
-    // -------------------------
     @PostMapping("/agregarFormacion")
     public String agregarFormacion(@RequestParam("cedula") Long cedula,
                                    @RequestParam("titulo") String titulo,
@@ -154,9 +171,7 @@ public class DocentesController {
         return "redirect:/docentes/ver/" + cedula;
     }
 
-    // -------------------------
     //       CAPACITACIÓN
-    // -------------------------
     @PostMapping("/agregarCapacitacion")
     public String agregarCapacitacion(@RequestParam("cedula") Long cedula,
                                       @RequestParam("tema") String tema,
@@ -180,9 +195,7 @@ public class DocentesController {
         return "redirect:/docentes/ver/" + cedula;
     }
 
-    // -------------------------
     //    EXPERIENCIA LABORAL
-    // -------------------------
     @PostMapping("/agregarExperiencia")
     public String agregarExperiencia(@RequestParam("cedula") Long cedula,
                                      @RequestParam("empresa") String empresa,
@@ -192,7 +205,6 @@ public class DocentesController {
                                      @RequestParam("fechaFinal")
                                      @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaFinal) {
 
-        // Llama a tu SP FIDE_EXPERIENCIA_LABORAL_AUTO_SP a través del service
         experienciaService.agregarExperienciaDocente(
                 cedula,
                 empresa,
@@ -206,10 +218,42 @@ public class DocentesController {
 
     @GetMapping("/eliminarExperiencia")
     public String eliminarExperiencia(@RequestParam("cedula") Long cedula,
-                                    @RequestParam("idEmpresa") Long idEmpresa,
-                                    @RequestParam("idCargo") Long idCargo) {
+                                      @RequestParam("idEmpresa") Long idEmpresa,
+                                      @RequestParam("idCargo") Long idCargo) {
 
         experienciaService.eliminarExperienciaDocente(cedula, idEmpresa, idCargo);
+
+        return "redirect:/docentes/ver/" + cedula;
+    }
+    //    EVALUACIÓN DOCENTE
+    @PostMapping("/agregarEvaluacion")
+    public String agregarEvaluacion(@RequestParam("cedula") Long cedula,
+                                    @RequestParam("idTipoEvaluacion") Long idTipoEvaluacion,
+                                    @RequestParam("anio") Integer anio,
+                                    @RequestParam("calificacion") BigDecimal calificacion,
+                                    @RequestParam("comentarios") String comentarios) {
+
+        evaluacionDocenteService.agregarEvaluacionDocente(
+                cedula,
+                idTipoEvaluacion,
+                anio,
+                calificacion,
+                comentarios
+        );
+
+        return "redirect:/docentes/ver/" + cedula;
+    }
+
+    @GetMapping("/eliminarEvaluacion")
+    public String eliminarEvaluacion(@RequestParam("cedula") Long cedula,
+                                     @RequestParam("idTipoEvaluacion") Long idTipoEvaluacion,
+                                     @RequestParam("anio") Integer anio) {
+
+        evaluacionDocenteService.eliminarEvaluacionDocente(
+                cedula,
+                idTipoEvaluacion,
+                anio
+        );
 
         return "redirect:/docentes/ver/" + cedula;
     }

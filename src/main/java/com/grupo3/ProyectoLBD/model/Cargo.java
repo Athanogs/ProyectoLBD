@@ -19,7 +19,7 @@ public class Cargo {
     @Column(name = "ID_ESTADO")
     private Integer idEstado;
 
-    // Getters y setters
+    //Getters y setters
     public Integer getIdCargo() {
         return idCargo;
     }

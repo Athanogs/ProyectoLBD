@@ -39,7 +39,6 @@ public class ExperienciaLaboralView {
     }
 
     // Getters y setters
-
     public Long getCedula() {
         return cedula;
     }

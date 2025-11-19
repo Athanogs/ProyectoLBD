@@ -17,7 +17,7 @@ public class Proveedor {
     private String descripcion;
 
     @Column(name = "ID_ESTADO")
-    private Integer idEstado; // por si luego quieres filtrar solo activos
+    private Integer idEstado; 
 
     public Integer getIdProveedor() {
         return idProveedor;

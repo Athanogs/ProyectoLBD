@@ -18,8 +18,6 @@ public class CapacitacionViewId implements Serializable {
         this.idProveedor = idProveedor;
     }
 
-    // getters/setters opcionales
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
