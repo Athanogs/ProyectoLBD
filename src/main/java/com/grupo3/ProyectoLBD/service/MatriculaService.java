@@ -29,6 +29,24 @@ public class MatriculaService {
         return valor.intValue();
     }
 
+    public Integer validarCedulaApoderado(Long cedula) {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withFunctionName("FIDE_VALIDAR_CEDULA_PERSONA_FN");
+
+        BigDecimal valor = call.executeFunction(BigDecimal.class, cedula);
+        return valor.intValue();
+    }
+
+    public Integer validarCedulaInfante(Long cedula) {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withFunctionName("FIDE_VALIDAR_CEDULA_INFANTE_FN");
+
+        BigDecimal valor = call.executeFunction(BigDecimal.class, cedula);
+        return valor.intValue();
+    }
+
     // Llamar a procedimiento de inserción
     public void insertarMatricula(
             Integer idMatricula,

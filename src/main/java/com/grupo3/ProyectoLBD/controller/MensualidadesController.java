@@ -85,6 +85,31 @@ public class MensualidadesController {
             @RequestParam Integer idEstado,
             RedirectAttributes redirectAttributes
     ) {
+        Integer res = mensualidadService.validarCedulaApoderado(cedulaApoderado);
+        if (res == 0) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "La cédula del apoderado no es válida o no se encuentra registrado.");
+            return "redirect:/mensualidades";
+        }
+
+        if (res == -1) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "Error al validar la cédula del apoderado.");
+            return "redirect:/mensualidades";
+        }
+
+        Integer num = mensualidadService.validarCedulaInfante(cedulaInfante);
+        if (num == 0) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "La cédula del infante no es válida o no se encuentra registrado.");
+            return "redirect:/mensualidades";
+        }
+
+        if (num == -1) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "Error al validar la cédula del infante.");
+            return "redirect:/mensualidades";
+        }
 
         Integer val = mensualidadService.validarFactura(idFactura);
 

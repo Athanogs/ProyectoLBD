@@ -1,7 +1,6 @@
 package com.grupo3.ProyectoLBD.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +24,24 @@ public class MensualidadService {
 
         // Oracle devuelve NUMBER → Spring lo mapea como BigDecimal
         BigDecimal valor = call.executeFunction(BigDecimal.class, idFactura);
+        return valor.intValue();
+    }
+
+    public Integer validarCedulaApoderado(Long cedula) {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withFunctionName("FIDE_VALIDAR_CEDULA_PERSONA_FN");
+
+        BigDecimal valor = call.executeFunction(BigDecimal.class, cedula);
+        return valor.intValue();
+    }
+
+    public Integer validarCedulaInfante(Long cedula) {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withFunctionName("FIDE_VALIDAR_CEDULA_INFANTE_FN");
+
+        BigDecimal valor = call.executeFunction(BigDecimal.class, cedula);
         return valor.intValue();
     }
 

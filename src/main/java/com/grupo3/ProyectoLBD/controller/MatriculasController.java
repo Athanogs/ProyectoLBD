@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.grupo3.ProyectoLBD.model.MatriculasView;
@@ -83,6 +87,31 @@ public class MatriculasController {
             @RequestParam Integer idEstado,
             RedirectAttributes redirectAttributes
     ) {
+        Integer res = matriculaService.validarCedulaApoderado(cedulaApoderado);
+        if (res == 0) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "La cédula del apoderado no es válida o no se encuentra registrado.");
+            return "redirect:/matriculas";
+        }
+
+        if (res == -1) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "Error al validar la cédula del apoderado.");
+            return "redirect:/matriculas";
+        }
+
+        Integer num = matriculaService.validarCedulaInfante(cedulaInfante);
+        if (num == 0) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "La cédula del infante no es válida o no se encuentra registrado.");
+            return "redirect:/matriculas";
+        }
+
+        if (num == -1) {
+            redirectAttributes.addFlashAttribute("mensajeTipo", "danger");
+            redirectAttributes.addFlashAttribute("mensaje", "Error al validar la cédula del infante.");
+            return "redirect:/matriculas";
+        }
 
         Integer val = matriculaService.validarFactura(idFactura);
 
