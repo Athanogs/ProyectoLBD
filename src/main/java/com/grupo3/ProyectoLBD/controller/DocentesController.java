@@ -13,6 +13,7 @@ import com.grupo3.ProyectoLBD.model.*;
 import com.grupo3.ProyectoLBD.repository.*;
 import com.grupo3.ProyectoLBD.service.FormacionAcademicaService;
 import com.grupo3.ProyectoLBD.service.CapacitacionService;
+import com.grupo3.ProyectoLBD.service.ExperienciaLaboralService;
 
 @Controller
 @RequestMapping("/docentes")
@@ -24,7 +25,11 @@ public class DocentesController {
     private final CapacitacionViewRepository capacitacionRepo;
     private final ProveedorRepository proveedorRepo;
     private final FormacionAcademicaService formacionService;
-    private final CapacitacionService capacitacionService;   // 👈 NUEVO
+    private final CapacitacionService capacitacionService;
+
+    private final ExperienciaLaboralViewRepository experienciaRepo;   // 👈 experiencia laboral (vista)
+    private final CargoRepository cargoRepo;                          // 👈 para el combo de cargos
+    private final ExperienciaLaboralService experienciaService;       // 👈 service que llama al SP AUTO
 
     public DocentesController(PersonaUsuarioRolViewRepository personaViewRepo,
                               FormacionAcademicaViewRepository formacionRepo,
@@ -32,14 +37,22 @@ public class DocentesController {
                               CapacitacionViewRepository capacitacionRepo,
                               ProveedorRepository proveedorRepo,
                               FormacionAcademicaService formacionService,
-                              CapacitacionService capacitacionService) {  // 👈 NUEVO
+                              CapacitacionService capacitacionService,
+                              CargoRepository cargoRepo,
+                              ExperienciaLaboralViewRepository experienciaRepo,
+                              ExperienciaLaboralService experienciaService) {
+
         this.personaViewRepo = personaViewRepo;
         this.formacionRepo = formacionRepo;
         this.institucionRepo = institucionRepo;
         this.capacitacionRepo = capacitacionRepo;
         this.proveedorRepo = proveedorRepo;
         this.formacionService = formacionService;
-        this.capacitacionService = capacitacionService;       // 👈 NUEVO
+        this.capacitacionService = capacitacionService;
+
+        this.cargoRepo = cargoRepo;
+        this.experienciaRepo = experienciaRepo;
+        this.experienciaService = experienciaService;
     }
 
     // LISTAR DOCENTES
@@ -47,6 +60,7 @@ public class DocentesController {
     public String verDocentes(@RequestParam(required = false) String cedula,
                               @RequestParam(required = false) String nombre,
                               Model model) {
+
         List<PersonaUsuarioRolView> lista;
         if (cedula != null && !cedula.isEmpty()) {
             Long ced = Long.valueOf(cedula);
@@ -58,13 +72,14 @@ public class DocentesController {
         } else {
             lista = personaViewRepo.findbyIdRol();
         }
+
         model.addAttribute("listaUsuarios", lista);
         model.addAttribute("cedula", cedula);
         model.addAttribute("nombre", nombre);
         return "docentes";
     }
 
-    // VER DETALLE DE UN DOCENTE
+    // VER DETALLE DE UN DOCENTE (formación + capacitación + experiencia)
     @GetMapping("/ver/{cedula}")
     public String editarUsuarioForm(@PathVariable("cedula") Long cedula, Model model) {
 
@@ -82,26 +97,41 @@ public class DocentesController {
         form.setApellidoMaterno(v.getApellidoMaterno());
         form.setIdEstado(v.getIdEstado() == null ? 1 : v.getIdEstado());
 
+        // Formación académica (solo activas)
         List<FormacionAcademicaView> formaciones =
                 formacionRepo.findByCedulaAndIdEstado(cedula, 1);
 
+        // Capacitaciones (solo activas)
         List<CapacitacionView> capacitaciones =
                 capacitacionRepo.findByCedulaAndIdEstado(cedula, 1);
 
+        // Experiencia laboral (solo activa)
+        List<ExperienciaLaboralView> experiencias =
+                experienciaRepo.findByCedulaAndIdEstado(cedula, 1);
+
+        // Catálogos para combos
         List<Institucion> listaInstituciones = institucionRepo.findAll();
-        List<Proveedor>   listaProveedores   = proveedorRepo.findAll();
+        List<Proveedor> listaProveedores = proveedorRepo.findAll();
+        List<Cargo> listaCargos = cargoRepo.findAll();
 
         model.addAttribute("personaForm", form);
         model.addAttribute("modoEdicion", true);
+
         model.addAttribute("listaFormaciones", formaciones);
         model.addAttribute("listaInstituciones", listaInstituciones);
+
         model.addAttribute("listaCapacitaciones", capacitaciones);
         model.addAttribute("listaProveedores", listaProveedores);
+
+        model.addAttribute("listaExperiencias", experiencias);
+        model.addAttribute("listaCargos", listaCargos);
 
         return "docentes/infoDocente";
     }
 
-    // AGREGAR FORMACIÓN
+    // -------------------------
+    //   FORMACIÓN ACADÉMICA
+    // -------------------------
     @PostMapping("/agregarFormacion")
     public String agregarFormacion(@RequestParam("cedula") Long cedula,
                                    @RequestParam("titulo") String titulo,
@@ -116,7 +146,6 @@ public class DocentesController {
         return "redirect:/docentes/ver/" + cedula;
     }
 
-    // ELIMINAR FORMACIÓN
     @GetMapping("/eliminarFormacion")
     public String eliminarFormacion(@RequestParam("cedula") Long cedula,
                                     @RequestParam("idFormacion") Long idFormacion) {
@@ -125,7 +154,9 @@ public class DocentesController {
         return "redirect:/docentes/ver/" + cedula;
     }
 
-    // 🔹 AGREGAR CAPACITACIÓN
+    // -------------------------
+    //       CAPACITACIÓN
+    // -------------------------
     @PostMapping("/agregarCapacitacion")
     public String agregarCapacitacion(@RequestParam("cedula") Long cedula,
                                       @RequestParam("tema") String tema,
@@ -140,13 +171,45 @@ public class DocentesController {
         return "redirect:/docentes/ver/" + cedula;
     }
 
-    // 🔹 ELIMINAR CAPACITACIÓN (usa FIDE_CAPACITACION_DELETE_SP)
     @GetMapping("/eliminarCapacitacion")
     public String eliminarCapacitacion(@RequestParam("cedula") Long cedula,
                                        @RequestParam("idTema") Integer idTema,
                                        @RequestParam("idProveedor") Integer idProveedor) {
 
         capacitacionService.eliminarCapacitacionDocente(cedula, idTema, idProveedor);
+        return "redirect:/docentes/ver/" + cedula;
+    }
+
+    // -------------------------
+    //    EXPERIENCIA LABORAL
+    // -------------------------
+    @PostMapping("/agregarExperiencia")
+    public String agregarExperiencia(@RequestParam("cedula") Long cedula,
+                                     @RequestParam("empresa") String empresa,
+                                     @RequestParam("idCargo") Long idCargo,
+                                     @RequestParam("fechaInicio")
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaInicio,
+                                     @RequestParam("fechaFinal")
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fechaFinal) {
+
+        // Llama a tu SP FIDE_EXPERIENCIA_LABORAL_AUTO_SP a través del service
+        experienciaService.agregarExperienciaDocente(
+                cedula,
+                empresa,
+                idCargo,
+                fechaInicio,
+                fechaFinal
+        );
+
+        return "redirect:/docentes/ver/" + cedula;
+    }
+
+    @GetMapping("/eliminarExperiencia")
+    public String eliminarExperiencia(@RequestParam("cedula") Long cedula,
+                                    @RequestParam("idEmpresa") Long idEmpresa,
+                                    @RequestParam("idCargo") Long idCargo) {
+
+        experienciaService.eliminarExperienciaDocente(cedula, idEmpresa, idCargo);
 
         return "redirect:/docentes/ver/" + cedula;
     }
