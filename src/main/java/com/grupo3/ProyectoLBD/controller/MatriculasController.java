@@ -39,7 +39,7 @@ public class MatriculasController {
 
         String infante = (nombreInfante == null) ? "" : nombreInfante;
 
-        // Filtro por nombre del infante o apoderado
+        // Filtro por nombre del infante 
         if (!infante.isEmpty()) {
             lista = matriculasViewRepository
                     .findByInfanteNombreContainingIgnoreCase(infante);

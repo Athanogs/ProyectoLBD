@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head('Detalle de Matrícula')"></head>
+
+<body>
+    <div class="layout-container">
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <main class="content">
+            <a href="/facturacion/gestionFacturas" class="btn btn-secondary mb-3">← Volver</a>
+
+            <h1 class="mb-4">Detalle de Factura</h1>
+            <div class="container my-4">
+
+                <div class="bg-white p-4 border rounded">
+
+                    <div class="text-center mb-4 pb-3 border-bottom">
+                        <h2 class="text-primary mb-0">Factura Electrónica</h2>
+                        <small class="text-muted">
+                            Número de Factura:
+                            <span th:text="${factura.idFactura}"></span>
+                        </small>
+                    </div>
+
+                    <h5 class="fw-semibold mb-3">Datos del Cliente</h5>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Cédula Apoderado:</strong>
+                                <span th:text="${factura.cedulaApoderado}"></span>
+                            </p>
+                            <p class="mb-1"><strong>Cédula Infante:</strong>
+                                <span th:text="${factura.cedulaInfante}"></span>
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Nombre Apoderado:</strong>
+                                <span th:text="${factura.apoderadoNombre}"></span>
+                            </p>
+                            <p class="mb-1"><strong>Nombre Infante:</strong>
+                                <span th:text="${factura.infanteNombre}"></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Datos de Emisión -->
+                    <h5 class="fw-semibold mb-3">Datos de Emisión</h5>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Fecha:</strong> <span th:text="${factura.fechaEmision}"></span></p>
+                            <p class="mb-1"><strong>Hora:</strong> <span th:text="${factura.horaEmision}"></span></p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Método de Pago:</strong> <span th:text="${factura.metodoPago}"></span></p>
+                            <p class="mb-1"><strong>Estado:</strong> <span th:text="${factura.estado}"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Detalle -->
+                    <h5 class="fw-semibold mb-3">Detalle de Servicios</h5>
+
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th class="text-end">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="d : ${detalle}">
+                                    <td th:text="${d.servicio}"></td>
+                                    <td class="text-end" th:text="${d.montoPagado}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Totales -->
+                    <h5 class="fw-semibold mb-3">Resumen</h5>
+
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold">Subtotal:</td>
+                                <td class="text-end" th:text="${factura.subtotal}"></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Descuento:</td>
+                                <td class="text-end" th:text="${factura.descuento}"></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">IVA:</td>
+                                <td class="text-end" th:text="${factura.iva}"></td>
+                            </tr>
+                            <tr class="table-light">
+                                <td class="fw-bold fs-5">Total:</td>
+                                <td class="text-end fs-5 fw-bold text-success" th:text="${factura.montoTotal}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

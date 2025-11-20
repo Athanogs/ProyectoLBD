@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<!-- Cargar el head -->
+<head th:replace="layout :: head('Gestión Financiera')"></head>
+
+<body>
+<div class="layout-container">
+
+    <aside th:replace="layout :: sidebar"></aside>
+
+    <main class="content">
+        <h1 class="mb-4">Gestión Financiera</h1>
+        <h2 class="mb-4">Seleccione una opción</h2>
+        <div class="d-flex gap-3">
+            <a th:href="@{/facturacion/facturacionServicios}" class="btn btn-primary btn-lg"> Facturación de Servicios  </a>
+            <a th:href="@{/facturacion/gestionFacturas}" class="btn btn-success btn-lg"> Gestión de Facturas </a>
+        </div>
+    </main>
+</div>
+</body>
+</html>

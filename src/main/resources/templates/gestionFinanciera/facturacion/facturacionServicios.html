@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head('Facturación de Servicios')"></head>
+
+<body>
+    <div class="layout-container">
+
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <main class="content">
+            <h1 class="mb-4">Facturación de Servicios</h1>
+            <div th:if="${mensaje}" th:text="${mensaje}" th:class="'alert alert-' + ${mensajeTipo}"></div>
+
+            <form th:action="@{/facturacion/guardar}" method="post" id="formFactura">
+
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <strong>Encabezado de Factura</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-4">
+                                <label class="form-label">ID Factura</label>
+                                <input type="number" class="form-control" name="idFactura" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Fecha Emisión</label>
+                                <input type="date" class="form-control" name="fechaEmision"
+                                    th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" readonly>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Cédula Apoderado</label>
+                                <input type="text" class="form-control" name="cedula" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Cédula Infante</label>
+                                <input type="text" class="form-control" name="cedulaInfante" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Método Pago</label>
+                                <select name="idMetodoPago" class="form-select" required>
+                                    <option value="">Seleccione</option>
+                                    <option th:each="mp : ${metodosPago}" th:value="${mp.idMetodoPago}"
+                                        th:text="${mp.descripcion}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <strong>Detalle de Factura</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-bordered align-middle" id="tablaServicios">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Monto</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select class="form-select servicioSelect" name="idServicio[]" required>
+                                            <option value="">Seleccione servicio</option>
+
+                                            <option th:each="s : ${servicios}" th:value="${s.idServicio}"
+                                                th:data-monto="${s.monto}" th:text="${s.descripcion}">
+                                            </option>
+
+
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input type="number" class="form-control montoServicio" name="montoPagado[]"
+                                            required step="0.01">
+                                    </td>
+
+                                    <td>
+                                        <button type="button"
+                                            class="btn btn-danger btn-sm btnEliminar">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <button type="button" class="btn btn-success" id="btnAgregarFila">
+                            + Agregar Servicio
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <strong>Totales</strong>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-3">
+                                <label class="form-label">Subtotal</label>
+                                <input type="number" class="form-control" id="subtotal" name="subtotal" readonly>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Descuento (%)</label>
+                                <input type="number" class="form-control" id="descuentoPorc" name="descuentoPorc"
+                                    value="0">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">- Descuento</label>
+                                <input type="number" class="form-control" id="descuento" name="descuento" value="0"
+                                    readonly>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">IVA (13%)</label>
+                                <input type="number" class="form-control" id="iva" name="iva" readonly>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Monto Total</label>
+                                <input type="number" class="form-control" id="total" name="montoTotal" readonly>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button class="btn btn-primary btn-lg" type="submit">Guardar Factura</button>
+                </div>
+
+            </form>
+
+        </main>
+    </div>
+
+    <script>
+        // Autocompletar monto al seleccionar servicio
+        document.addEventListener('change', function (e) {
+            if (e.target.classList.contains('servicioSelect')) {
+
+                // Validación de repetidos
+                let seleccionado = e.target.value;
+                let repetido = false;
+
+                document.querySelectorAll('.servicioSelect').forEach(sel => {
+                    if (sel !== e.target && sel.value === seleccionado) {
+                        repetido = true;
+                    }
+                });
+
+                if (repetido) {
+                    alert("Este servicio ya fue agregado.");
+                    e.target.value = "";
+                    e.target.closest("tr").querySelector(".montoServicio").value = "";
+                    calcularTotales();
+                    return;
+                }
+
+                // Asignar monto automático
+                let monto = e.target.selectedOptions[0].dataset.monto || 0;
+                e.target.closest('tr').querySelector('.montoServicio').value = monto;
+
+                calcularTotales();
+            }
+        });
+
+        // Capturar monto manual
+        document.addEventListener("input", function (e) {
+            if (e.target.classList.contains("montoServicio")) {
+                calcularTotales();
+            }
+        });
+
+        // Agregar fila
+        document.getElementById("btnAgregarFila").addEventListener("click", function () {
+            let fila = document.querySelector("#tablaServicios tbody tr").cloneNode(true);
+
+            fila.querySelector(".servicioSelect").value = "";
+            fila.querySelector(".montoServicio").value = "";
+
+            fila.querySelector(".btnEliminar").addEventListener("click", eliminarFila);
+
+            document.querySelector("#tablaServicios tbody").appendChild(fila);
+        });
+
+        // Eliminar fila
+        function eliminarFila(e) {
+            let filas = document.querySelectorAll("#tablaServicios tbody tr");
+            if (filas.length > 1) {
+                e.target.closest("tr").remove();
+                calcularTotales();
+            }
+        }
+
+        document.querySelectorAll(".btnEliminar").forEach(btn => {
+            btn.addEventListener("click", eliminarFila);
+        });
+
+        //Validar descuento
+        document.getElementById("descuentoPorc").addEventListener("input", function () {
+            validarDescuento();
+            calcularTotales();
+        });
+
+        document.getElementById("descuentoPorc").addEventListener("change", function () {
+            validarDescuento();
+            calcularTotales();
+        });
+
+        function validarDescuento() {
+            let descuentoPorc = document.getElementById("descuentoPorc");
+            let valor = Number(descuentoPorc.value);
+
+            if (valor < 0) {
+                alert("El descuento no puede ser negativo.");
+                descuentoPorc.value = 0;
+            }
+
+            if (valor > 100) {
+                alert("El descuento no puede ser mayor al 100%.");
+                descuentoPorc.value = 100;
+            }
+        }
+
+        // Cálculo de totales
+        function calcularTotales() {
+            let subtotal = 0;
+
+            document.querySelectorAll(".montoServicio").forEach(input => {
+                subtotal += Number(input.value || 0);
+            });
+
+            document.getElementById("subtotal").value = subtotal;
+
+            let descuentoPorc = Number(document.getElementById("descuentoPorc").value || 0);
+            let descuentoMonto = subtotal * (descuentoPorc / 100);
+            document.getElementById("descuento").value = descuentoMonto.toFixed(2);
+
+            let iva = (subtotal - descuentoMonto) * 0.13;
+            document.getElementById("iva").value = iva.toFixed(2);
+
+            let total = subtotal - descuentoMonto + iva;
+            document.getElementById("total").value = total.toFixed(2);
+        }
+    </script>
+
+
+</body>
+
+</html>
