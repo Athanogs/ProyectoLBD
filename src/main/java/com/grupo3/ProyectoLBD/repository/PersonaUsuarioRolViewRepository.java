@@ -1,11 +1,12 @@
 package com.grupo3.ProyectoLBD.repository;
 
-import com.grupo3.ProyectoLBD.model.PersonaUsuarioRolView;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.grupo3.ProyectoLBD.model.PersonaUsuarioRolView;
 
 @Repository
 public interface PersonaUsuarioRolViewRepository extends JpaRepository<PersonaUsuarioRolView, Long> {

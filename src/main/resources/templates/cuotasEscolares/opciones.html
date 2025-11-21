@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<!-- Cargar el head -->
+<head th:replace="layout :: head('Cuotas Escolares')"></head>
+
+<body>
+<div class="layout-container">
+    <!-- Cargar el sidebar -->
+    <aside th:replace="layout :: sidebar"></aside>
+
+    <!-- CONTENIDO PROPIO (NO VIENE DE LAYOUT) -->
+    <main class="content">
+        <h1 class="mb-4">Cuotas Escolares</h1>
+        <h2 class="mb-4">Seleccione una opción</h2>
+
+        <div class="d-flex gap-3">
+
+            <a th:href="@{/matriculas}" class="btn btn-primary btn-lg">
+                Matrículas
+            </a>
+
+            <a th:href="@{/mensualidades}" class="btn btn-success btn-lg">
+                Mensualidades
+            </a>
+
+        </div>
+
+    </main>
+    
+
+</div>
+</body>
+</html>

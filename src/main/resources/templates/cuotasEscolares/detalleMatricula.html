@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head('Detalle de Matrícula')"></head>
+
+<body>
+
+    <div class="layout-container">
+
+        <!-- Sidebar -->
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <main class="content">
+            <a href="/matriculas" class="btn btn-secondary mb-3">← Volver</a>
+
+            <h1 class="mb-4">Detalle de Matrícula</h1>            
+
+            <div class="card p-4">
+
+                <!-- Información General -->
+                <h3 class="mb-3">Información General</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4"><strong>ID Matrícula:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.idMatricula}"></div>
+
+                    <div class="col-md-4"><strong>Fecha de Matrícula:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.fechaMatricula}"></div>
+
+                    <div class="col-md-4"><strong>Estado:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.estadoMatricula}"></div>
+                </div>
+
+                <!-- Información del Infante -->
+                <h3 class="mb-3">Datos del Infante</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4"><strong>Cédula del Infante:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.cedulaInfante}"></div>
+
+                    <div class="col-md-4"><strong>Nombre Completo:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.infanteNombre}"></div>
+                </div>
+
+                <!-- Apoderado -->
+                <h3 class="mb-3">Datos del Apoderado</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4"><strong>Cédula:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.cedulaApoderado}"></div>
+
+                    <div class="col-md-4"><strong>Nombre Completo:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.apoderadoNombre}"></div>
+                </div>
+
+                <!-- Servicio y Pagos -->
+                <h3 class="mb-3">Información del Servicio</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4"><strong>Descripción del Servicio:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.servicioDescripcion}"></div>
+
+                    <div class="col-md-4"><strong>Monto del Servicio:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.servicioMonto}"></div>
+
+                    <div class="col-md-4"><strong>Monto Pagado:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.servicioMontoPagado}"></div>
+                </div>
+
+                <!-- Factura -->
+                <h3 class="mb-3">Factura Asociada</h3>
+                <div class="row mb-4">
+                    <div class="col-md-4"><strong>ID Factura:</strong></div>
+                    <div class="col-md-8" th:text="${matricula.idFactura}"></div>
+                </div>
+                
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>
