@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head('Crear Infante')"></head>
+
+<body>
+
+<div class="layout-container">
+
+    <aside th:replace="layout :: sidebar"></aside>
+
+    <main class="content">
+
+        <h1 class="titulo-seccion">Crear Infante</h1>
+
+        <div class="card p-4">
+
+            <form th:action="@{/infantes/guardar}" th:object="${infante}" method="post">
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label>Cédula</label>
+                        <input type="text" class="form-control" th:field="*{cedulaInfante}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Fecha Nacimiento</label>
+                        <input type="date" class="form-control" th:field="*{fechaNacimiento}" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" th:field="*{nombre}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Apellido Paterno</label>
+                        <input type="text" class="form-control" th:field="*{apellidoPaterno}" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Apellido Materno</label>
+                        <input type="text" class="form-control" th:field="*{apellidoMaterno}" required>
+                    </div>
+                </div>
+
+                <input type="hidden" th:field="*{idEstado}" value="1">
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/infantes}" class="btn btn-secondary">Cancelar</a>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
