@@ -6,7 +6,7 @@
 
 <body>
 
-<div class="layout-container">
+<div class="d-flex">
 
     <!-- CARGAR SIDEBAR DESDE layout -->
     <aside th:replace="~{layout :: sidebar}"></aside>
@@ -21,7 +21,7 @@
             <div class="d-flex gap-2">
                 <a class="btn btn-primary" th:href="@{/infantes/crear}">+ Crear Infante</a>
 
-                <!-- 🟡 NUEVO BOTÓN: VER INACTIVOS -->
+                <!--  NUEVO BOTÓN: VER INACTIVOS -->
                 <a class="btn btn-warning" th:href="@{/infantes/inactivos}">Inactivos</a>
             </div>
 
