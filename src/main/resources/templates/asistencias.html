@@ -11,11 +11,11 @@
             <div class="container-fluid">
                 <div class="d-flex justify-content-between mb-4">
                     <h2 class="fw-bold">Registro de Asistencias</h2>
-                    <a href="/asistencias/nueva" class="btn btn-primary">+ Nueva Asistencia</a>
+                    <a href="/asistencia/nueva" class="btn btn-primary">+ Nueva Asistencia</a>
                 </div>
 
                 <!-- Formulario de búsqueda -->
-        <form class="row g-3 mb-4" method="get" th:action="@{/asistencias}">
+        <form class="row g-3 mb-4" method="get" th:action="@{/asistencia}">
     <div class="col-md-6">
         <input type="text" class="form-control" name="nombre"
                placeholder="Buscar por nombre o apellidos" th:value="${nombre}">
@@ -28,7 +28,7 @@
 
     <div class="col-md-6 d-flex gap-2">
         <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="/asistencias" class="btn btn-secondary">Limpiar</a>
+        <a href="/asistencia" class="btn btn-secondary">Limpiar</a>
     </div>
 </form>
 
@@ -61,9 +61,9 @@
                                     <td th:text="${a.observaciones}"></td>
                                     <td th:text="${a.estadoAsistencia}"></td>
                                     <td class="text-center">
-                                        <a th:href="@{'/asistencias/editar/' + ${a.cedulaInfante} + '/' + ${a.fechaAsistencia}}" 
+                                        <a th:href="@{'/asistencia/editar/' + ${a.cedulaInfante} + '/' + ${a.fechaAsistencia}}" 
                                            class="btn btn-warning btn-sm">Editar</a>
-                                        <a th:href="@{'/asistencias/eliminar/' + ${a.cedulaInfante} + '/' + ${a.fechaAsistencia}}"
+                                        <a th:href="@{'/asistencia/eliminar/' + ${a.cedulaInfante} + '/' + ${a.fechaAsistencia}}"
                                            class="btn btn-danger btn-sm"
                                            onclick="return confirm('¿Desea eliminar este registro?');">
                                             Eliminar

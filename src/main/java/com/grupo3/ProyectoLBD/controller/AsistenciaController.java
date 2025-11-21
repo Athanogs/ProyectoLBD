@@ -1,6 +1,7 @@
 package com.grupo3.ProyectoLBD.controller;
 
 import com.grupo3.ProyectoLBD.dto.AsistenciaForm;
+import com.grupo3.ProyectoLBD.model.RegistroAsistenciaId;
 import com.grupo3.ProyectoLBD.model.RegistroAsistenciaView;
 import com.grupo3.ProyectoLBD.repository.RegistroAsistenciaViewRepository;
 import com.grupo3.ProyectoLBD.service.AsistenciaService;
@@ -23,7 +24,7 @@ public class AsistenciaController {
     @Autowired
     private AsistenciaService asistenciaService;
 
-    // LISTAR ASISTENCIAS
+    // LISTAR ASISTENCIAS  ->  GET /asistencia
     @GetMapping
     public String listarAsistencias(
             @RequestParam(required = false) String nombre,
@@ -48,58 +49,61 @@ public class AsistenciaController {
         model.addAttribute("listaAsistencias", lista);
         model.addAttribute("nombre", nombre);
         model.addAttribute("cedula", cedula);
-        return "asistencias";
+        return "asistencias";  // templates/asistencias.html
     }
 
-    // FORMULARIO NUEVA ASISTENCIA
+    // FORMULARIO NUEVA ASISTENCIA -> GET /asistencia/nueva
     @GetMapping("/nueva")
     public String nuevaAsistencia(Model model) {
         AsistenciaForm form = new AsistenciaForm();
-        form.setIdEstado(1); 
+        form.setIdEstado(1); // Activo por defecto
         model.addAttribute("asistenciaForm", form);
         model.addAttribute("modoEdicion", false);
+        return "asistencias/form";  // templates/asistencias/form.html
+    }
+
+    // FORMULARIO EDICIÓN -> GET /asistencia/editar/{cedula}/{fecha}
+    @GetMapping("/editar/{cedula}/{fecha}")
+    public String editarAsistencia(@PathVariable Long cedula,
+                                   @PathVariable String fecha,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
+
+        LocalDate fechaAsis = LocalDate.parse(fecha);
+
+        RegistroAsistenciaView asistencia = asistenciaRepo.findById(
+                new RegistroAsistenciaId(cedula, fechaAsis)
+        ).orElse(null);
+
+        if (asistencia == null) {
+            redirectAttributes.addFlashAttribute("error", "Registro de asistencia no encontrado.");
+            return "redirect:/asistencia";
+        }
+
+        AsistenciaForm form = new AsistenciaForm();
+
+        // DATOS PERSONALES COMPLETOS
+        form.setCedulaInfante(asistencia.getCedulaInfante());
+        form.setNombreInfante(asistencia.getNombreInfante());
+        form.setApellidoPaterno(asistencia.getApellidoPaterno());
+        form.setApellidoMaterno(asistencia.getApellidoMaterno());
+        form.setFechaNacimiento(asistencia.getFechaNacimiento());
+
+        // DATOS DE ASISTENCIA
+        form.setFechaAsistencia(asistencia.getFechaAsistencia());
+        form.setHoraEntrada(asistencia.getHoraEntrada());
+        form.setHoraSalida(asistencia.getHoraSalida());
+        form.setObservaciones(asistencia.getObservaciones()); // si lo tienes en la vista
+
+        model.addAttribute("asistenciaForm", form);
+        model.addAttribute("modoEdicion", true);
+
         return "asistencias/form";
     }
 
-    @GetMapping("/editar/{cedula}/{fecha}")
-    public String editarAsistencia(@PathVariable Long cedula,
-                               @PathVariable String fecha,
-                               Model model) {
-
-    LocalDate fechaAsis = LocalDate.parse(fecha);
-
-    RegistroAsistenciaView asistencia = asistenciaRepo.findById(
-            new com.grupo3.ProyectoLBD.model.RegistroAsistenciaId(cedula, fechaAsis)
-    ).orElse(null);
-
-    if (asistencia == null) {
-        return "redirect:/asistencias?error=notfound";
-    }
-
-    AsistenciaForm form = new AsistenciaForm();
-
-    // DATOS PERSONALES COMPLETOS
-    form.setCedulaInfante(asistencia.getCedulaInfante());
-    form.setNombreInfante(asistencia.getNombreInfante());
-    form.setApellidoPaterno(asistencia.getApellidoPaterno());
-    form.setApellidoMaterno(asistencia.getApellidoMaterno());
-    form.setFechaNacimiento(asistencia.getFechaNacimiento());
-
-    // DATOS DE ASISTENCIA
-    form.setFechaAsistencia(asistencia.getFechaAsistencia());
-    form.setHoraEntrada(asistencia.getHoraEntrada());
-    form.setHoraSalida(asistencia.getHoraSalida());
-    form.setObservaciones(asistencia.getObservaciones());
-
-    model.addAttribute("asistenciaForm", form);
-    model.addAttribute("modoEdicion", true);
-
-    return "asistencias/form";
-}
-
-    // GUARDAR ASISTENCIA (solo envía los 6 parámetros del SP)
+    // GUARDAR ASISTENCIA (CREAR) -> POST /asistencia/guardar
     @PostMapping("/guardar")
-    public String guardarAsistencia(@ModelAttribute AsistenciaForm form,
+    public String guardarAsistencia(@ModelAttribute("asistenciaForm") AsistenciaForm form,
                                     RedirectAttributes redirectAttributes,
                                     Model model) {
 
@@ -114,34 +118,37 @@ public class AsistenciaController {
 
             asistenciaService.crearAsistencia(envio);
 
-            return "redirect:/asistencias?success";
+            redirectAttributes.addFlashAttribute("mensaje", "Asistencia registrada correctamente.");
+            return "redirect:/asistencia"; // vuelve al listado
 
         } catch (Exception e) {
             model.addAttribute("error", "Error creando asistencia: " + e.getMessage());
-            model.addAttribute("asistenciaForm", form);
             model.addAttribute("modoEdicion", false);
+            model.addAttribute("asistenciaForm", form);
             return "asistencias/form";
         }
     }
 
-    // ACTUALIZAR ASISTENCIA
+    // ACTUALIZAR ASISTENCIA -> POST /asistencia/actualizar
     @PostMapping("/actualizar")
-    public String actualizarAsistencia(@ModelAttribute AsistenciaForm form,
+    public String actualizarAsistencia(@ModelAttribute("asistenciaForm") AsistenciaForm form,
+                                       RedirectAttributes redirectAttributes,
                                        Model model) {
 
         try {
             asistenciaService.actualizarAsistencia(form);
-            return "redirect:/asistencias?updated";
+            redirectAttributes.addFlashAttribute("mensaje", "Asistencia actualizada correctamente.");
+            return "redirect:/asistencia"; // listado
 
         } catch (Exception e) {
             model.addAttribute("error", "Error actualizando: " + e.getMessage());
-            model.addAttribute("asistenciaForm", form);
             model.addAttribute("modoEdicion", true);
+            model.addAttribute("asistenciaForm", form);
             return "asistencias/form";
         }
     }
 
-    // ELIMINAR ASISTENCIA
+    // ELIMINAR ASISTENCIA -> GET /asistencia/eliminar/{cedula}/{fecha}
     @GetMapping("/eliminar/{cedula}/{fecha}")
     public String eliminarAsistencia(@PathVariable Long cedula,
                                      @PathVariable String fecha,
@@ -155,6 +162,6 @@ public class AsistenciaController {
             redirect.addFlashAttribute("error", "No se pudo eliminar: " + e.getMessage());
         }
 
-        return "redirect:/asistencias";
+        return "redirect:/asistencia"; // siempre volvemos al listado
     }
 }

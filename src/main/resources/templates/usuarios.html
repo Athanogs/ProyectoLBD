@@ -1,56 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Usuarios</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/css/layout.css}">
-</head>
+<!-- Cargar el head desde el layout -->
+<head th:replace="layout :: head('Gestión de Usuarios')"></head>
 
 <body>
 
-<!-- CAMBIO: antes era class="layout-container" -->
 <div class="d-flex">
 
-    <!-- SIDEBAR ORIGINAL -->
-    <aside class="sidebar">
+    <!-- Cargar el sidebar desde el layout -->
+    <aside th:replace="layout :: sidebar"></aside>
 
-        <div class="profile">
-            <img src="https://i.pravatar.cc/100" alt="avatar">
-            <h3>Olivia Wilson</h3>
-            <span>Administrador</span>
-        </div>
-
-        <nav class="menu">
-            <a href="/" class="item">Inicio</a>
-            <a href="/usuarios" class="item active">Gestión de Usuarios</a>
-            <a href="/docentes" class="item">Gestión de Docentes</a>
-            <a href="/infantes" class="item">Gestión de Infantes</a>
-            <a href="/actividades" class="item">Planificación de Actividades</a>
-            <a href="/asistencia" class="item">Registro de Asistencia</a>
-            <a href="/entradas-salidas" class="item">Entradas y Salidas</a>
-            <a href="/matriculas" class="item">Matrículas y Mensualidades</a>
-            <a href="/pagos" class="item">Facturación y Pagos</a>
-            <a href="/reportes" class="item">Reportes</a>
-            <a href="/auditoria" class="item">Auditoría</a>
-        </nav>
-
-        <div class="logout">
-            <a href="/logout">⟵ Cerrar Sesión</a>
-        </div>
-
-    </aside>
-
-    <!-- CONTENIDO -->
+    <!-- CONTENIDO PROPIO DE LA VISTA -->
     <main class="content">
 
         <h1 class="mb-4">Gestión de Usuarios</h1>
@@ -118,8 +79,8 @@
                     <td th:text="${u.rol}"></td>
 
                     <td>
-                        <a th:href="@{'/usuarios/ver/' + ${u.cedula}}"
-                           class="btn btn-info btn-sm">Ver</a>
+                    <!--    <a th:href="@{'/usuarios/ver/' + ${u.cedula}}"
+                           class="btn btn-info btn-sm">Ver</a>-->
 
                         <a th:href="@{'/usuarios/editar/' + ${u.cedula}}"
                            class="btn btn-warning btn-sm">Editar</a>
