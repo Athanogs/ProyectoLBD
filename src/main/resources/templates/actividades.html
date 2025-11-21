@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="layout :: head('Planificación de Actividades')"></head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <!-- Contenido principal -->
+        <main class="flex-grow-1 p-4">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between mb-4">
+                    <h2 class="fw-bold">Planificación de Actividades</h2>
+                    <a href="/actividades/nueva" class="btn btn-primary">+ Nueva Actividad</a>
+                </div>
+
+                <!-- Formulario de búsqueda -->
+                <form class="row g-3 mb-4" method="get" action="/actividades">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" name="descripcion"
+                               placeholder="Buscar por descripción" th:value="${descripcion}">
+                    </div>
+                    <div class="col-md-6 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a href="/actividades" class="btn btn-secondary">Limpiar</a>
+                    </div>
+                </form>
+
+                <!-- Tabla -->
+                <div class="card shadow">
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-bordered mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Grupos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="a : ${listaActividades}">
+                                    <td th:text="${a.descripcion}"></td>
+                                    <td th:text="${a.fecha}"></td>
+                                    <td th:text="${a.hora}"></td>
+                                    <td th:text="${a.nombreGrupo}"></td>
+                                    <td th:text="${a.estadoActividad}"></td>
+                                    <td class="text-center">
+                                        <a th:href="@{'/actividades/editar/' + ${a.idActividad}}" class="btn btn-warning btn-sm">Editar</a>
+                                        <a th:href="@{'/actividades/eliminar/' + ${a.idActividad}}"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('¿Desea eliminar esta actividad?');">
+                                            Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(listaActividades)}">
+                                    <td colspan="6" class="text-center">No se encontraron actividades</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

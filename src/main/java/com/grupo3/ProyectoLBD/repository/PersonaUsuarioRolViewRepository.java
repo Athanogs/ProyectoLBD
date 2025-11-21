@@ -15,6 +15,9 @@ public interface PersonaUsuarioRolViewRepository extends JpaRepository<PersonaUs
     @Query("SELECT p FROM PersonaUsuarioRolView p WHERE p.idEstado = 1")
     List<PersonaUsuarioRolView> findbyIdEstado();
 
+    @Query("SELECT p FROM PersonaUsuarioRolView p WHERE p.idRol = 3")
+    List<PersonaUsuarioRolView> findbyIdRol();
+
     List<PersonaUsuarioRolView> findByNombreContainingIgnoreCaseOrApellidoPaternoContainingIgnoreCaseOrApellidoMaternoContainingIgnoreCase(
             String nombre, String apellidoPaterno, String apellidoMaterno);
 }
