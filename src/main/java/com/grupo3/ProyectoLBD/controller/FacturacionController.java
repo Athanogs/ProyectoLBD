@@ -168,7 +168,6 @@ public class FacturacionController {
             return "redirect:/facturacion/gestionFacturas?eliminado=true";
 
         } catch (Exception e) {
-            e.printStackTrace();
             return "redirect:/facturacion/gestionFacturas?errorEliminar=true";
         }
     }
