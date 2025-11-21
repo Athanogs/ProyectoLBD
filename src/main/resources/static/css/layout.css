@@ -4,12 +4,16 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-.layout-container {
-    display: flex;
-    height: 100vh;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
-/* ========== SIDEBAR ========== */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
 .sidebar {
     width: 280px;
     background: #0f7a75; 
@@ -43,7 +47,6 @@ body {
     opacity: 0.8;
 }
 
-/* MENU */
 .menu {
     flex-grow: 1;
 }
@@ -86,7 +89,6 @@ body {
     opacity: 1;
 }
 
-/* ========== CONTENIDO DINÁMICO ========== */
 .content {
     flex-grow: 1;
     padding: 40px;
