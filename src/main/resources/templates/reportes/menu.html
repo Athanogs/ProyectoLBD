@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout :: head('Reportes')}"></head>
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}"></div>
+
+<th:block th:fragment="content">
+
+    <div class="d-flex align-items-center mb-4">
+        <h1 class="fw-bold text-primary mb-0">📊 Reportes del Sistema</h1>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+
+        <h4 class="fw-semibold text-secondary mb-3">Selecciona un reporte para generar:</h4>
+
+        <div class="list-group list-group-flush">
+
+            <a th:href="@{/reportes/facturas/form}"
+               class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center rounded-3 my-2 shadow-sm report-item">
+                <span class="fw-bold">📁 Facturas por Padre</span>
+                <span class="badge bg-primary rounded-pill px-3 py-2">Ver</span>
+            </a>
+
+            <a th:href="@{/reportes/asistencia/form}"
+               class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center rounded-3 my-2 shadow-sm report-item">
+                <span class="fw-bold">🗓️ Asistencia por Rango de Fechas</span>
+                <span class="badge bg-primary rounded-pill px-3 py-2">Ver</span>
+            </a>
+
+            <a th:href="@{/reportes/actividades/form}"
+               class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center rounded-3 my-2 shadow-sm report-item">
+                <span class="fw-bold">🎨 Actividades del Infante</span>
+                <span class="badge bg-primary rounded-pill px-3 py-2">Ver</span>
+            </a>
+
+            <a th:href="@{/reportes/resumen/form}"
+               class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center rounded-3 my-2 shadow-sm report-item">
+                <span class="fw-bold">📘 Resumen del Padre</span>
+                <span class="badge bg-primary rounded-pill px-3 py-2">Ver</span>
+            </a>
+
+        </div>
+    </div>
+
+</th:block>
+
+<!-- Estilos extra visuales -->
+<style>
+    .report-item {
+        background: white;
+        border: none;
+        transition: all 0.25s ease;
+    }
+
+    .report-item:hover {
+        transform: translateY(-3px);
+        background: #f8f9ff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+</body>
+</html>

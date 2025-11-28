@@ -1,111 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<!-- CARGAR HEAD DESDE layout -->
 <head th:replace="~{layout :: head('Gestión de Infantes')}"></head>
 
 <body>
 
-<div class="d-flex">
+<!-- Cargar el layout SIN parámetros (así lo exige tu layout.html) -->
+<div th:replace="~{layout :: layout(~{::content})}"></div>
 
-    <!-- CARGAR SIDEBAR DESDE layout -->
-    <aside th:replace="~{layout :: sidebar}"></aside>
+<!-- === CONTENIDO REAL === -->
+<th:block th:fragment="content">
 
-    <main class="content">
+    <h1 class="mb-4">Gestión de Infantes</h1>
 
-        <h1 class="mb-4">Gestión de Infantes</h1>
+    <!-- BOTONES SUPERIORES -->
+    <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex gap-2">
+            <a class="btn btn-primary" th:href="@{/infantes/crear}">+ Crear Infante</a>
+            <a class="btn btn-warning" th:href="@{/infantes/inactivos}">Inactivos</a>
+        </div>
+    </div>
 
-        <!-- BOTONES SUPERIORES -->
-        <div class="d-flex justify-content-between mb-3">
-
-            <div class="d-flex gap-2">
-                <a class="btn btn-primary" th:href="@{/infantes/crear}">+ Crear Infante</a>
-
-                <!--  NUEVO BOTÓN: VER INACTIVOS -->
-                <a class="btn btn-warning" th:href="@{/infantes/inactivos}">Inactivos</a>
-            </div>
-
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <form class="row g-2 mb-3" th:action="@{/infantes/buscar}" method="get">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="cedula"
+                   placeholder="Buscar por cédula" th:value="${cedula}">
         </div>
 
-        <!-- FORMULARIO DE BÚSQUEDA -->
-        <form class="row g-2 mb-3" th:action="@{/infantes/buscar}" method="get">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="nombre"
+                   placeholder="Buscar por nombre o apellido" th:value="${nombre}">
+        </div>
 
-            <div class="col-md-4">
-                <input type="text"
-                       class="form-control"
-                       name="cedula"
-                       placeholder="Buscar por cédula"
-                       th:value="${cedula}">
-            </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-success">Buscar</button>
+            <a th:href="@{/infantes}" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
 
-            <div class="col-md-4">
-                <input type="text"
-                       class="form-control"
-                       name="nombre"
-                       placeholder="Buscar por nombre o apellido"
-                       th:value="${nombre}">
-            </div>
+    <!-- TABLA -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Cédula</th>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Fecha Nacimiento</th>
+            <th>Cédula Padre</th>
+            <th>Grupo</th>
+            <th>Alergias</th>
+            <th>Medicamentos</th>
+            <th>Vacunas</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
 
-            <div class="col-md-4 d-flex gap-2">
-                <button type="submit" class="btn btn-success">Buscar</button>
-                <a th:href="@{/infantes}" class="btn btn-secondary">Limpiar</a>
-            </div>
-        </form>
+        <tbody>
+        <tr th:each="infante : ${infantes}">
+            <td th:text="${infante.cedulaInfante}"></td>
+            <td th:text="${infante.nombre}"></td>
+            <td th:text="${infante.apellidoPaterno}"></td>
+            <td th:text="${infante.apellidoMaterno}"></td>
+            <td th:text="${infante.fechaNacimiento}"></td>
+            <td th:text="${infante.cedulaPadre}"></td>
+            <td th:text="${infante.nombreGrupo}"></td>
+            <td th:text="${infante.alergias}"></td>
+            <td th:text="${infante.medicamentos}"></td>
+            <td th:text="${infante.vacunas}"></td>
 
-        <!-- TABLA -->
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Cédula</th>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Fecha Nacimiento</th>
+            <td th:text="${infante.estado == 1 ? 'Activo' : 'Inactivo'}"></td>
 
-                <th>Cédula Padre</th>
-                <th>Grupo</th>
-                <th>Alergias</th>
-                <th>Medicamentos</th>
-                <th>Vacunas</th>
+            <td>
+                <a th:href="@{'/infantes/editar/' + ${infante.cedulaInfante}}"
+                   class="btn btn-warning btn-sm">Editar</a>
 
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
+                <a th:href="@{'/infantes/eliminar/' + ${infante.cedulaInfante}}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Esta Seguro de Eliminar este infante?');">
+                    Eliminar
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-            <tbody>
-            <tr th:each="infante : ${infantes}">
-                <td th:text="${infante.cedulaInfante}"></td>
-                <td th:text="${infante.nombre}"></td>
-                <td th:text="${infante.apellidoPaterno}"></td>
-                <td th:text="${infante.apellidoMaterno}"></td>
-                <td th:text="${infante.fechaNacimiento}"></td>
-
-                <td th:text="${infante.cedulaPadre}"></td>
-                <td th:text="${infante.nombreGrupo}"></td>
-                <td th:text="${infante.alergias}"></td>
-                <td th:text="${infante.medicamentos}"></td>
-                <td th:text="${infante.vacunas}"></td>
-
-                <td th:text="${infante.estado == 1 ? 'Activo' : 'Inactivo'}"></td>
-
-                <td>
-                    <a th:href="@{'/infantes/editar/' + ${infante.cedulaInfante}}"
-                       class="btn btn-warning btn-sm">Editar</a>
-
-                    <a th:href="@{'/infantes/eliminar/' + ${infante.cedulaInfante}}"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('¿Esta Seguro de Eliminar este infante?');">
-                        Eliminar
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-    </main>
-
-</div>
+</th:block>
 
 </body>
 </html>
