@@ -12,7 +12,8 @@
 
 <body>
 
-<!-- SIDEBAR -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <aside class="sidebar" th:fragment="sidebar">
 
     <div class="profile">
@@ -60,13 +61,14 @@
 
 </aside>
 
-<!-- LAYOUT PRINCIPAL -->
-<div class="layout-container" th:fragment="layout">
+<div class="layout-container" th:fragment="layout(content)">
     <aside th:replace="~{layout :: sidebar}"></aside>
     <main class="content">
         <th:block th:insert="${content}"></th:block>
     </main>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </body>
 </html>

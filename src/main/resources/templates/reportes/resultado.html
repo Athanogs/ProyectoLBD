@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="layout :: head(${titulo})"></head>
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    
+<th:block th:fragment="content">
+
+    <h1 class="mb-4" th:text="${titulo}"></h1>
+
+    <div th:if="${#lists.isEmpty(datos)}" class="alert alert-warning">
+        No se encontraron registros para esta consulta.
+    </div>
+
+    <div class="resultado-container">
+
+        <div th:each="row : ${datos}" class="card shadow p-4 mb-4">
+
+            <h5 class="fw-bold mb-3">Registro</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <tbody>
+                    <tr th:each="entry : ${row}">
+                        <th style="min-width: 220px; text-transform: capitalize;"
+                            th:text="${entry.key.toLowerCase().replace('_',' ')}"></th>
+
+                        <td style="white-space: normal; word-break: break-word;"
+                            th:text="${entry.value}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center mt-4" th:if="${totalPaginas > 1}">
+        
+        <a class="btn btn-outline-primary me-2"
+           th:if="${page > 1}"
+           th:href="@{|/reportes/asistencia?inicio=${inicio}&fin=${fin}&page=${page-1}&size=${size}|}">
+            ← Anterior
+        </a>
+
+        <span class="px-3 py-2 border rounded bg-light">
+            Página <span th:text="${page}"></span> de <span th:text="${totalPaginas}"></span>
+        </span>
+
+        <a class="btn btn-outline-primary ms-2"
+           th:if="${page < totalPaginas}"
+           th:href="@{|/reportes/asistencia?inicio=${inicio}&fin=${fin}&page=${page+1}&size=${size}|}">
+            Siguiente →
+        </a>
+
+    </div>
+
+    <a th:href="@{/reportes}" class="btn btn-secondary mt-4">← Volver</a>
+
+</th:block>
+
+</div>
+
+</body>
+</html>

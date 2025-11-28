@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout :: head('Resumen del Padre')}"></head>
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}"></div>
+
+<th:block th:fragment="content">
+
+    <div class="d-flex align-items-center mb-4">
+        <h1 class="fw-bold text-primary mb-0">📘 Resumen del Padre</h1>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 p-4 bg-light">
+
+        <h5 class="fw-semibold text-secondary mb-3">Ingrese la cédula del infante:</h5>
+
+        <form id="formResumen" th:action="@{/reportes/resumen}" method="get">
+
+            <label class="form-label fw-bold">Cédula del Infante</label>
+            <input class="form-control rounded-3" name="cedula" required>
+
+            <button class="btn btn-primary mt-3 rounded-3 px-4 py-2">Buscar</button>
+
+        </form>
+
+    </div>
+
+</th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById("formResumen").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: "¿Desea generar el reporte?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Sí, generar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#0d6efd"
+        }).then((result) => {
+            if (result.isConfirmed) e.target.submit();
+        });
+    });
+</script>
+
+</body>
+</html>
