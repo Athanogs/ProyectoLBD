@@ -12,7 +12,9 @@
 
 <body>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- ====================== SIDEBAR ========================= -->
 
 <aside class="sidebar" th:fragment="sidebar">
 
@@ -39,7 +41,6 @@
             Gestión de Infantes
         </a>
 
-        <!-- ✅ NUEVA OPCIÓN: GESTIÓN DE CONTACTOS -->
         <a th:href="@{/contactos}"
            th:class="'item ' + (${activePage} == 'contactos' ? 'active' : '')">
             Gestión de Contactos
@@ -84,14 +85,18 @@
 
 </aside>
 
+<!-- ====================== LAYOUT PRINCIPAL ========================= -->
+
 <div class="layout-container" th:fragment="layout(content)">
     <aside th:replace="~{layout :: sidebar}"></aside>
+
     <main class="content">
-        <th:block th:replace="~{::contenido}"></th:block>
+        <!-- AQUI SE INSERTA EL CONTENIDO DE CADA PAGINA -->
+        <th:block th:replace="${content}"></th:block>
     </main>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>
