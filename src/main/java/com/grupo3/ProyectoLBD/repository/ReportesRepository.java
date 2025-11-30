@@ -13,26 +13,43 @@ public class ReportesRepository {
         this.jdbc = jdbc;
     }
 
+    // ============================================================
+    //  FACTURAS POR PADRE
+    // ============================================================
     public List<Map<String, Object>> facturasPadre(long cedula) {
         String sql = """
             SELECT 
                 ID_FACTURA,
                 CEDULA_PADRE,
                 NOMBRE_PADRE,
-                APE1_PADRE,
-                APE2_PADRE,
+                APE1_PADRE AS APELLIDO_PATERNO_PADRE,
+                APE2_PADRE AS APELLIDO_MATERNO_PADRE,
+
                 CEDULA_INFANTE,
                 NOMBRE_INFANTE,
-                APE1_INFANTE,
-                APE2_INFANTE,
+                APE1_INFANTE AS APELLIDO_PATERNO_INFANTE,
+                APE2_INFANTE AS APELLIDO_MATERNO_INFANTE,
+
                 FECHA_EMISION,
                 HORA_EMISION,
                 MONTO_TOTAL,
                 SUBTOTAL,
                 DESCUENTO,
                 IVA,
+
                 ID_MATRICULA,
-                ID_MENSUALIDAD
+                ID_MENSUALIDAD,
+                MES_MENSUALIDAD,
+
+                CASE 
+                    WHEN ESTADO_MENSUALIDAD = 1 THEN 'ACTIVO'
+                    WHEN ESTADO_MENSUALIDAD = 2 THEN 'INACTIVO'
+                    WHEN ESTADO_MENSUALIDAD = 3 THEN 'EMITIDO'
+                    WHEN ESTADO_MENSUALIDAD = 4 THEN 'ANULADO'
+                    WHEN ESTADO_MENSUALIDAD = 5 THEN 'PAGADO'
+                    ELSE 'DESCONOCIDO'
+                END AS ESTADO_MENSUALIDAD
+
             FROM FIDE_REPORTE_FACTURAS_PADRE_V
             WHERE CEDULA_PADRE = ?
         """;
@@ -40,6 +57,9 @@ public class ReportesRepository {
         return jdbc.queryForList(sql, cedula);
     }
 
+    // ============================================================
+    //  ASISTENCIA POR RANGO
+    // ============================================================
     public List<Map<String, Object>> asistenciaRango(String inicio, String fin) {
         String sql = """
             SELECT
@@ -51,7 +71,14 @@ public class ReportesRepository {
                 HORA_ENTRADA,
                 HORA_SALIDA,
                 OBSERVACIONES,
-                ID_ESTADO
+
+                CASE
+                    WHEN ID_ESTADO = 1 THEN 'PRESENTE'
+                    WHEN ID_ESTADO = 2 THEN 'AUSENTE'
+                    WHEN ID_ESTADO = 3 THEN 'JUSTIFICADO'
+                    ELSE 'DESCONOCIDO'
+                END AS ESTADO_ASISTENCIA
+
             FROM FIDE_REPORTE_ASISTENCIA_V
             WHERE FECHA BETWEEN TO_DATE(?, 'YYYY-MM-DD') AND TO_DATE(?, 'YYYY-MM-DD')
         """;
@@ -59,6 +86,9 @@ public class ReportesRepository {
         return jdbc.queryForList(sql, inicio, fin);
     }
 
+    // ============================================================
+    //  ACTIVIDADES POR INFANTE
+    // ============================================================
     public List<Map<String, Object>> actividadesInfante(long cedula) {
         String sql = """
             SELECT
@@ -69,10 +99,10 @@ public class ReportesRepository {
                 OBSERVACIONES,
                 CEDULA_INFANTE,
                 NOMBRE_INFANTE,
-                APE1_INFANTE,
-                APE2_INFANTE,
+                APE1_INFANTE AS APELLIDO_PATERNO_INFANTE,
+                APE2_INFANTE AS APELLIDO_MATERNO_INFANTE,
                 CALIFICACION,
-                OBS_CALIFICACION
+                OBS_CALIFICACION AS OBSERVACIONES_ACTIVIDAD
             FROM FIDE_REPORTE_ACTIVIDADES_V
             WHERE CEDULA_INFANTE = ?
         """;
@@ -80,25 +110,47 @@ public class ReportesRepository {
         return jdbc.queryForList(sql, cedula);
     }
 
-    public List<Map<String, Object>> resumenPadre(long cedula) {
-        String sql = """
-            SELECT
-                CEDULA_INFANTE,
-                NOMBRE_INFANTE,
-                APELLIDO_PATERNO,
-                APELLIDO_MATERNO,
-                FECHA_ASISTENCIA,
-                HORA_ENTRADA,
-                HORA_SALIDA,
-                ID_FACTURA,
-                MONTO_TOTAL,
-                ID_ACTIVIDAD,
-                CALIFICACION,
-                OBSERVACIONES
-            FROM FIDE_REPORTE_RESUMEN_PADRE_V
-            WHERE CEDULA_INFANTE = ?
-        """;
+    // ============================================================
+    //  RESUMEN GENERAL POR PADRE
+    // ============================================================
+    public List<Map<String, Object>> resumenPadre(long cedulaInfante) {
+    String sql = """
+        SELECT
+            CEDULA_INFANTE,
+            NOMBRE_INFANTE,
+            APE1_INFANTE AS APELLIDO_PATERNO,
+            APE2_INFANTE AS APELLIDO_MATERNO,
 
-        return jdbc.queryForList(sql, cedula);
-    }
+            FECHA_ASISTENCIA,
+            HORA_ENTRADA,
+            HORA_SALIDA,
+
+            CASE
+                WHEN ESTADO_ASISTENCIA = 1 THEN 'PRESENTE'
+                WHEN ESTADO_ASISTENCIA = 2 THEN 'AUSENTE'
+                WHEN ESTADO_ASISTENCIA = 3 THEN 'JUSTIFICADO'
+                ELSE 'DESCONOCIDO'
+            END AS ESTADO_ASISTENCIA,
+
+            OBS_ASISTENCIA AS OBSERVACIONES_ASISTENCIA,
+
+            ID_FACTURA,
+            FECHA_EMISION,
+            MONTO_TOTAL,
+            SUBTOTAL,
+            DESCUENTO,
+            IVA,
+
+            ID_ACTIVIDAD,
+            ACTIVIDAD AS DESCRIPCION_ACTIVIDAD,
+            CALIFICACION AS CALIFICACION_ACTIVIDAD,
+            OBS_CALIFICACION AS OBSERVACIONES_ACTIVIDAD
+
+        FROM FIDE_REPORTE_RESUMEN_PADRE_V
+        WHERE CEDULA_INFANTE = ?
+    """;
+
+    return jdbc.queryForList(sql, cedulaInfante);
+}
+
 }
