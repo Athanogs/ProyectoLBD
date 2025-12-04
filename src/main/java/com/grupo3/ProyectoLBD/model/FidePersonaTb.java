@@ -29,6 +29,13 @@ public class FidePersonaTb {
     @Column(name = "ID_ESTADO")
     private Integer idEstado;
 
+    // 🔵 AGREGAR ESTO (relación con FIDE_ROL_TB)
+    @OneToOne
+    @JoinColumn(name = "ID_ROL", referencedColumnName = "ID_ROL", insertable = false, updatable = false)
+    private FideRolTb rol;
+
+    // Getters y Setters
+
     public Long getCedula() { return cedula; }
     public void setCedula(Long cedula) { this.cedula = cedula; }
 
@@ -49,4 +56,7 @@ public class FidePersonaTb {
 
     public Integer getIdEstado() { return idEstado; }
     public void setIdEstado(Integer idEstado) { this.idEstado = idEstado; }
+
+    public FideRolTb getRol() { return rol; }
+    public void setRol(FideRolTb rol) { this.rol = rol; }
 }

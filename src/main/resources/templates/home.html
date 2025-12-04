@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inicio</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+</head>
+
+<body>
+
+<div class="layout-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <!-- Perfil -->
+        <div class="profile">
+            <img th:src="@{/assets/logo.png}" alt="Logo">
+            <h3 th:text="${nombreCompleto}">Nombre Usuario</h3>
+            <span th:text="${rol}">Rol</span>
+        </div>
+
+        <!-- MENÚ ADMINISTRADOR -->
+        <div class="menu" th:if="${rol == 'ADMINISTRADOR'}">
+            <a class="item" href="/usuarios">Gestión de Usuarios</a>
+            <a class="item" href="/docentes">Gestión de Docentes</a>
+            <a class="item" href="/infantes">Gestión de Infantes</a>
+            <a class="item" href="/contactos">Gestión de Contactos</a>
+            <a class="item" href="/actividades">Planificación de Actividades</a>
+            <a class="item" href="/asistencia">Registro de Asistencia</a>
+            <a class="item" href="/cuotas">Cuotas Escolares</a>
+            <a class="item" href="/finanzas">Gestión Financiera</a>
+            <a class="item" href="/reportes">Reportes</a>
+            <a class="item" href="/auditoria">Auditoría</a>
+        </div>
+
+        <!-- MENÚ APODERADO -->
+        <div class="menu" th:if="${rol == 'APODERADO'}">
+            <a class="item" href="/mis-infantes">Mis Infantes</a>
+            <a class="item" href="/pagos">Pagos</a>
+            <a class="item" href="/reportes">Reportes</a>
+        </div>
+
+        <!-- MENÚ DOCENTE -->
+        <div class="menu" th:if="${rol == 'DOCENTE'}">
+            <a class="item" href="/asistencia">Lista de Asistencia</a>
+            <a class="item" href="/notas">Registro de Notas</a>
+            <a class="item" href="/actividades">Planificación de Actividades</a>
+            <a class="item" href="/reportes">Reportes</a>
+        </div>
+
+        <!-- LOGOUT -->
+        <div class="logout">
+            <a href="/logout">Cerrar Sesión</a>
+        </div>
+
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="content">
+        <h1>Bienvenido, <span th:text="${nombreCompleto}"></span></h1>
+        <p>Selecciona una opción del menú lateral.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
