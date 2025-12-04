@@ -21,60 +21,51 @@
     <div class="profile">
         <img src="/assets/logo.png" alt="logo">
         <h3>Happy Kids</h3>
-        <span>Administrador</span>
+        <!-- Mostrar rol dinámico -->
+        <span th:text="${rol}">Rol</span>
     </div>
 
     <nav class="menu">
 
-        <a th:href="@{/usuarios}"
-           th:class="'item ' + (${activePage} == 'usuarios' ? 'active' : '')">
-            Gestión de Usuarios
-        </a>
+        <!-- =============== MENU ADMINISTRADOR =============== -->
+        <div th:if="${rol == 'ADMINISTRADOR'}">
 
-        <a th:href="@{/docentes}"
-           th:class="'item ' + (${activePage} == 'docentes' ? 'active' : '')">
-            Gestión de Docentes
-        </a>
+            <a th:href="@{/usuarios}" class="item">Gestión de Usuarios</a>
+            <a th:href="@{/docentes}" class="item">Gestión de Docentes</a>
+            <a th:href="@{/infantes}" class="item">Gestión de Infantes</a>
+            <a th:href="@{/contactos}" class="item">Gestión de Contactos</a>
+            <a th:href="@{/actividades}" class="item">Planificación de Actividades</a>
+            <a th:href="@{/asistencia}" class="item">Registro de Asistencia</a>
+            <a th:href="@{/cuotasEscolares}" class="item">Cuotas Escolares</a>
+            <a th:href="@{/gestionFinanciera}" class="item">Gestión Financiera</a>
+            <a th:href="@{/reportes}" class="item">Reportes</a>
+            <a th:href="@{/auditoria}" class="item">Auditoría</a>
 
-        <a th:href="@{/infantes}"
-           th:class="'item ' + (${activePage} == 'infantes' ? 'active' : '')">
-            Gestión de Infantes
-        </a>
+        </div>
 
-        <a th:href="@{/contactos}"
-           th:class="'item ' + (${activePage} == 'contactos' ? 'active' : '')">
-            Gestión de Contactos
-        </a>
+        <!-- =============== MENU APODERADO =============== -->
+        <div th:if="${rol == 'APODERADO'}">
 
-        <a th:href="@{/actividades}"
-           th:class="'item ' + (${activePage} == 'actividades' ? 'active' : '')">
-            Planificación de Actividades
-        </a>
+            <a class="item" th:href="@{/mis-infantes}">Mis Infantes</a>
+            <a class="item" th:href="@{/pagos}">Pagos</a>
 
-        <a th:href="@{/asistencia}"
-           th:class="'item ' + (${activePage} == 'asistencia' ? 'active' : '')">
-            Registro de Asistencia
-        </a>
+        </div>
 
-        <a th:href="@{/cuotasEscolares}"
-           th:class="'item ' + (${activePage} == 'cuotas' ? 'active' : '')">
-            Cuotas Escolares
-        </a>
+        <!-- =============== MENU DOCENTE =============== -->
+        <div th:if="${rol == 'DOCENTE'}">
 
-        <a th:href="@{/gestionFinanciera}"
-           th:class="'item ' + (${activePage} == 'finanzas' ? 'active' : '')">
-            Gestión Financiera
-        </a>
+            <a class="item" th:href="@{/infantes}">Gestión de Infantes</a>
 
-        <a th:href="@{/reportes}"
-           th:class="'item ' + (${activePage} == 'reportes' ? 'active' : '')">
-            Reportes
-        </a>
+            <a class="item" th:href="@{/actividades}">
+                Planificación de Actividades
+            </a>
 
-        <a th:href="@{/auditoria}"
-           th:class="'item ' + (${activePage} == 'auditoria' ? 'active' : '')">
-            Auditoría
-        </a>
+            <a class="item" th:href="@{/asistencia}">
+                Registro de Asistencia
+            </a>
+
+        </div>
+
     </nav>
 
     <div class="logout">
@@ -91,7 +82,7 @@
     <aside th:replace="~{layout :: sidebar}"></aside>
 
     <main class="content">
-        <!-- AQUI SE INSERTA EL CONTENIDO DE CADA PAGINA -->
+        <!-- Aquí se inserta el contenido de cada página -->
         <th:block th:replace="${content}"></th:block>
     </main>
 </div>
