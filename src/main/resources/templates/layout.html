@@ -14,20 +14,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- ====================== SIDEBAR ========================= -->
-
 <aside class="sidebar" th:fragment="sidebar">
 
     <div class="profile">
         <img src="/assets/logo.png" alt="logo">
-        <h3>Happy Kids</h3>
-        <!-- Mostrar rol dinámico -->
+        <h3 th:text="${nombreCompleto}">Nombre Usuario</h3>
         <span th:text="${rol}">Rol</span>
     </div>
 
     <nav class="menu">
-
-        <!-- =============== MENU ADMINISTRADOR =============== -->
         <div th:if="${rol == 'ADMINISTRADOR'}">
 
             <a th:href="@{/usuarios}" class="item">Gestión de Usuarios</a>
@@ -43,26 +38,17 @@
 
         </div>
 
-        <!-- =============== MENU APODERADO =============== -->
         <div th:if="${rol == 'APODERADO'}">
-
-            <a class="item" th:href="@{/mis-infantes}">Mis Infantes</a>
-            <a class="item" th:href="@{/pagos}">Pagos</a>
-
+            <a class="item" href="/mis-infantes">Mis Infantes</a>
+            <a class="item" href="/pagos">Pagos</a>
+            <a class="item" href="/reportes">Reportes</a>
         </div>
 
-        <!-- =============== MENU DOCENTE =============== -->
         <div th:if="${rol == 'DOCENTE'}">
-
-            <a class="item" th:href="@{/infantes}">Gestión de Infantes</a>
-
-            <a class="item" th:href="@{/actividades}">
-                Planificación de Actividades
-            </a>
-
-            <a class="item" th:href="@{/asistencia}">
-                Registro de Asistencia
-            </a>
+            <a class="item" href="/asistencia">Lista de Asistencia</a>
+            <a class="item" href="/notas">Registro de Notas</a>
+            <a class="item" href="/actividades">Planificación de Actividades</a>
+            <a class="item" href="/reportes">Reportes</a>
 
         </div>
 
@@ -75,8 +61,6 @@
     </div>
 
 </aside>
-
-<!-- ====================== LAYOUT PRINCIPAL ========================= -->
 
 <div class="layout-container" th:fragment="layout(content)">
     <aside th:replace="~{layout :: sidebar}"></aside>
