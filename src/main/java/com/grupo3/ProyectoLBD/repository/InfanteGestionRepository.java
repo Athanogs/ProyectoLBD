@@ -30,10 +30,14 @@ public interface InfanteGestionRepository extends JpaRepository<InfanteGestionVi
             @Param("nombre") String nombre
     );
 
-
     // ============================
     // LISTAR POR ESTADO (1=Activo, 2=Inactivo)
     // ============================
     List<InfanteGestionView> findByEstado(Integer estado);
+
+    // ============================
+    // LISTAR INFANTES DE UN APODERADO
+    // ============================
+    List<InfanteGestionView> findByCedulaPadre(String cedulaPadre);
 
 }

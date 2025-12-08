@@ -32,7 +32,7 @@
 
     <div class="d-flex justify-content-between mb-4">
         <h2 class="fw-bold" th:text="${modoEdicion} ? 'Editar Asistencia' : 'Registrar Asistencia'"></h2>
-        <a href="/asistencias" class="btn btn-secondary">← Volver</a>
+        <a href="/asistencia" class="btn btn-secondary">← Volver</a>
     </div>
 
     <!-- Error -->
@@ -41,7 +41,7 @@
     <div class="card shadow">
         <div class="card-body">
 
-            <form th:action="${modoEdicion} ? @{/asistencias/actualizar} : @{/asistencias/guardar}"
+            <form th:action="${modoEdicion} ? @{/asistencia/actualizar} : @{/asistencia/guardar}"
                   th:object="${asistenciaForm}" method="post">
 
                 <!-- FILA 1 -->
@@ -110,7 +110,7 @@
 
                 <!-- BOTONES -->
                 <div class="d-flex justify-content-end mt-4">
-                    <a href="/asistencias" class="btn btn-secondary me-2">Cancelar</a>
+                    <a href="/asistencia" class="btn btn-secondary me-2">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
 

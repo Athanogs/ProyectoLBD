@@ -1,143 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Usuarios</title>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" th:href="@{/css/layout.css}">
-</head>
+<head th:replace="layout :: head('Gestión de Usuarios')"></head>
 
 <body>
 
-<!-- CAMBIO: antes era class="layout-container" -->
-<div class="d-flex">
+    <div class="d-flex">
 
-    <!-- SIDEBAR ORIGINAL -->
-    <aside class="sidebar">
+        <aside th:replace="layout :: sidebar"></aside>
 
-        <div class="profile">
-            <img src="https://i.pravatar.cc/100" alt="avatar">
-            <h3>Olivia Wilson</h3>
-            <span>Administrador</span>
-        </div>
+        <main class="content">
 
-        <nav class="menu">
-            <a href="/" class="item">Inicio</a>
-            <a href="/usuarios" class="item active">Gestión de Usuarios</a>
-            <a href="/docentes" class="item">Gestión de Docentes</a>
-            <a href="/infantes" class="item">Gestión de Infantes</a>
-            <a href="/actividades" class="item">Planificación de Actividades</a>
-            <a href="/asistencia" class="item">Registro de Asistencia</a>
-            <a href="/entradas-salidas" class="item">Entradas y Salidas</a>
-            <a href="/matriculas" class="item">Matrículas y Mensualidades</a>
-            <a href="/pagos" class="item">Facturación y Pagos</a>
-            <a href="/reportes" class="item">Reportes</a>
-            <a href="/auditoria" class="item">Auditoría</a>
-        </nav>
+            <h1 class="mb-4">Gestión de Usuarios</h1>
 
-        <div class="logout">
-            <a href="/logout">⟵ Cerrar Sesión</a>
-        </div>
+            <div class="card p-4">
+                <h2 class="mb-4">Lista de Usuarios</h2>
+                <a href="/usuarios/nuevo" class="btn btn-primary">
+                    + Crear Persona
+                </a>
 
-    </aside>
+                <form class="row g-3 mb-4" method="get" action="/usuarios">
 
-    <!-- CONTENIDO -->
-    <main class="content">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="cedula" placeholder="Buscar por cédula"
+                            th:value="${cedula}">
+                    </div>
 
-        <h1 class="mb-4">Gestión de Usuarios</h1>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="nombre" placeholder="Buscar por nombre o apellido"
+                            th:value="${nombre}">
+                    </div>
 
-        <div class="card p-4">
-            <h2 class="mb-4">Lista de Usuarios</h2>
-            <a href="/usuarios/nuevo" class="btn btn-primary">
-                + Crear Persona
-            </a>
+                    <div class="col-md-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                        <a href="/usuarios" class="btn btn-secondary">Limpiar</a>
+                    </div>
 
-            <!-- FORMULARIO DE BÚSQUEDA -->
-            <form class="row g-3 mb-4" method="get" action="/usuarios">
+                </form>
 
-                <!-- Buscar por cédula -->
-                <div class="col-md-4">
-                    <input type="text"
-                           class="form-control"
-                           name="cedula"
-                           placeholder="Buscar por cédula"
-                           th:value="${cedula}">
-                </div>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Username</th>
+                            <th>Contraseña</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
 
-                <!-- Buscar por nombre o apellido -->
-                <div class="col-md-4">
-                    <input type="text"
-                           class="form-control"
-                           name="nombre"
-                           placeholder="Buscar por nombre o apellido"
-                           th:value="${nombre}">
-                </div>
+                    <tbody>
+                        <tr th:each="u : ${listaUsuarios}">
+                            <td th:text="${u.cedula}"></td>
+                            <td th:text="${u.nombre}"></td>
+                            <td th:text="${u.apellidoPaterno}"></td>
+                            <td th:text="${u.apellidoMaterno}"></td>
+                            <td th:text="${u.fechaNacimiento}"></td>
+                            <td th:text="${u.username}"></td>
+                            <td th:text="${u.contrasena}"></td>
+                            <td th:text="${u.rol}"></td>
 
-                <!-- Botones -->
-                <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                    <a href="/usuarios" class="btn btn-secondary">Limpiar</a>
-                </div>
+                            <td>
+                                <!--    <a th:href="@{'/usuarios/ver/' + ${u.cedula}}"
+                           class="btn btn-info btn-sm">Ver</a>-->
 
-            </form>
+                                <a th:href="@{'/usuarios/editar/' + ${u.cedula}}"
+                                    class="btn btn-warning btn-sm">Editar</a>
 
-            <!-- TABLA DE RESULTADOS -->
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Cédula</th>
-                    <th>Nombre</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Username</th>
-                    <th>Contraseña</th>
-                    <th>Rol</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
+                                <a th:href="@{'/usuarios/eliminar/' + ${u.cedula}}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Eliminar este usuario?');">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <tbody>
-                <tr th:each="u : ${listaUsuarios}">
-                    <td th:text="${u.cedula}"></td>
-                    <td th:text="${u.nombre}"></td>
-                    <td th:text="${u.apellidoPaterno}"></td>
-                    <td th:text="${u.apellidoMaterno}"></td>
-                    <td th:text="${u.fechaNacimiento}"></td>
-                    <td th:text="${u.username}"></td>
-                    <td th:text="${u.contrasena}"></td>
-                    <td th:text="${u.rol}"></td>
+        </main>
 
-                    <td>
-                        <a th:href="@{'/usuarios/ver/' + ${u.cedula}}"
-                           class="btn btn-info btn-sm">Ver</a>
-
-                        <a th:href="@{'/usuarios/editar/' + ${u.cedula}}"
-                           class="btn btn-warning btn-sm">Editar</a>
-
-                        <a th:href="@{'/usuarios/eliminar/' + ${u.cedula}}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Eliminar este usuario?');">
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
-
-</div>
+    </div>
 
 </body>
+
 </html>

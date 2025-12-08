@@ -19,6 +19,13 @@ public class FideUsuarioTb {
     @Column(name = "ID_ESTADO")
     private Integer idEstado;
 
+    // 🔵 AGREGAR ESTO (relación 1:1 con la tabla FIDE_PERSONA_TB)
+    @OneToOne
+    @JoinColumn(name = "CEDULA", referencedColumnName = "CEDULA", insertable = false, updatable = false)
+    private FidePersonaTb persona;
+
+    // Getters y Setters
+
     public Long getCedula() { return cedula; }
     public void setCedula(Long cedula) { this.cedula = cedula; }
 
@@ -26,8 +33,11 @@ public class FideUsuarioTb {
     public void setUsername(String username) { this.username = username; }
 
     public String getContrasena() { return contrasena; }
-    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+    public void setContraseña(String contrasena) { this.contrasena = contrasena; }
 
     public Integer getIdEstado() { return idEstado; }
     public void setIdEstado(Integer idEstado) { this.idEstado = idEstado; }
+
+    public FidePersonaTb getPersona() { return persona; }
+    public void setPersona(FidePersonaTb persona) { this.persona = persona; }
 }

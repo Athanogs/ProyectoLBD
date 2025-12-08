@@ -16,12 +16,29 @@ public class FideRolTb {
     @Column(name = "ID_ESTADO")
     private Integer idEstado;
 
-    public Integer getIdRol() { return idRol; }
-    public void setIdRol(Integer idRol) { this.idRol = idRol; }
+    // ===== GETTERS Y SETTERS =====
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public Integer getIdRol() {
+        return idRol;
+    }
 
-    public Integer getIdEstado() { return idEstado; }
-    public void setIdEstado(Integer idEstado) { this.idEstado = idEstado; }
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Integer getIdEstado() {
+        return idEstado;
+    }
+
+    public void setIdEstado(Integer idEstado) {
+        this.idEstado = idEstado;
+    }
 }

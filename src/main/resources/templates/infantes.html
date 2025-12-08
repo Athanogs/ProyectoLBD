@@ -1,49 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<!-- CARGAR HEAD DESDE layout -->
 <head th:replace="~{layout :: head('Gestión de Infantes')}"></head>
 
 <body>
 
-<div class="d-flex">
+<!-- === LLAMADA PRINCIPAL AL LAYOUT === -->
+<div th:replace="~{layout :: layout(~{::content})}">
 
-    <!-- CARGAR SIDEBAR DESDE layout -->
-    <aside th:replace="~{layout :: sidebar}"></aside>
-
-    <main class="content">
+    <!-- === CONTENIDO REAL QUE SE INSERTA EN EL LAYOUT === -->
+    <th:block th:fragment="content">
 
         <h1 class="mb-4">Gestión de Infantes</h1>
 
         <!-- BOTONES SUPERIORES -->
         <div class="d-flex justify-content-between mb-3">
-
             <div class="d-flex gap-2">
                 <a class="btn btn-primary" th:href="@{/infantes/crear}">+ Crear Infante</a>
-
-                <!--  NUEVO BOTÓN: VER INACTIVOS -->
                 <a class="btn btn-warning" th:href="@{/infantes/inactivos}">Inactivos</a>
             </div>
-
         </div>
 
         <!-- FORMULARIO DE BÚSQUEDA -->
         <form class="row g-2 mb-3" th:action="@{/infantes/buscar}" method="get">
-
             <div class="col-md-4">
-                <input type="text"
-                       class="form-control"
-                       name="cedula"
-                       placeholder="Buscar por cédula"
-                       th:value="${cedula}">
+                <input type="text" class="form-control" name="cedula"
+                       placeholder="Buscar por cédula" th:value="${cedula}">
             </div>
 
             <div class="col-md-4">
-                <input type="text"
-                       class="form-control"
-                       name="nombre"
-                       placeholder="Buscar por nombre o apellido"
-                       th:value="${nombre}">
+                <input type="text" class="form-control" name="nombre"
+                       placeholder="Buscar por nombre o apellido" th:value="${nombre}">
             </div>
 
             <div class="col-md-4 d-flex gap-2">
@@ -61,13 +48,11 @@
                 <th>Apellido Paterno</th>
                 <th>Apellido Materno</th>
                 <th>Fecha Nacimiento</th>
-
                 <th>Cédula Padre</th>
                 <th>Grupo</th>
                 <th>Alergias</th>
                 <th>Medicamentos</th>
                 <th>Vacunas</th>
-
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
@@ -80,7 +65,6 @@
                 <td th:text="${infante.apellidoPaterno}"></td>
                 <td th:text="${infante.apellidoMaterno}"></td>
                 <td th:text="${infante.fechaNacimiento}"></td>
-
                 <td th:text="${infante.cedulaPadre}"></td>
                 <td th:text="${infante.nombreGrupo}"></td>
                 <td th:text="${infante.alergias}"></td>
@@ -95,7 +79,7 @@
 
                     <a th:href="@{'/infantes/eliminar/' + ${infante.cedulaInfante}}"
                        class="btn btn-danger btn-sm"
-                       onclick="return confirm('¿Esta Seguro de Eliminar este infante?');">
+                       onclick="return confirm('¿Está seguro de eliminar este infante?');">
                         Eliminar
                     </a>
                 </td>
@@ -103,8 +87,7 @@
             </tbody>
         </table>
 
-    </main>
-
+    </th:block>
 </div>
 
 </body>

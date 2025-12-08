@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Inicio')"></head>
+
+
+<body>
+    <div class="d-flex">
+        <aside th:replace="layout :: sidebar">
+
+
+        </aside>
+
+        <main class="content">
+            <h1>Bienvenido, <span th:text="${nombreCompleto}"></span></h1>
+            <p>Selecciona una opción del menú lateral.</p>
+        </main>
+
+    </div>
+</body>
+
+</html>

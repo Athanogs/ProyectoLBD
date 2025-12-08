@@ -8,27 +8,17 @@
 		<version>3.5.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.grupo3</groupId>
 	<artifactId>ProyectoLBD</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ProyectoLBD</name>
 	<description>Proyecto de Lenguajes de BD</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -40,10 +30,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -58,8 +50,15 @@
 		<dependency>
     		<groupId>com.oracle.database.jdbc</groupId>
     		<artifactId>ojdbc11</artifactId>
-    		<version>21.3.0.0</version> <!-- puedes usar otra versión disponible en Maven -->
+    		<version>21.3.0.0</version>
 		</dependency>
+
+		<!-- 🔐 SPRING SECURITY (ÚNICO QUE SE AGREGA) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
