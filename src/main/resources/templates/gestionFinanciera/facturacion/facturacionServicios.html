@@ -157,11 +157,9 @@
     </div>
 
     <script>
-        // Autocompletar monto al seleccionar servicio
         document.addEventListener('change', function (e) {
             if (e.target.classList.contains('servicioSelect')) {
 
-                // Validación de repetidos
                 let seleccionado = e.target.value;
                 let repetido = false;
 
@@ -179,7 +177,6 @@
                     return;
                 }
 
-                // Asignar monto automático
                 let monto = e.target.selectedOptions[0].dataset.monto || 0;
                 e.target.closest('tr').querySelector('.montoServicio').value = monto;
 
@@ -187,14 +184,12 @@
             }
         });
 
-        // Capturar monto manual
         document.addEventListener("input", function (e) {
             if (e.target.classList.contains("montoServicio")) {
                 calcularTotales();
             }
         });
 
-        // Agregar fila
         document.getElementById("btnAgregarFila").addEventListener("click", function () {
             let fila = document.querySelector("#tablaServicios tbody tr").cloneNode(true);
 
@@ -206,7 +201,6 @@
             document.querySelector("#tablaServicios tbody").appendChild(fila);
         });
 
-        // Eliminar fila
         function eliminarFila(e) {
             let filas = document.querySelectorAll("#tablaServicios tbody tr");
             if (filas.length > 1) {
@@ -219,7 +213,6 @@
             btn.addEventListener("click", eliminarFila);
         });
 
-        //Validar descuento
         document.getElementById("descuentoPorc").addEventListener("input", function () {
             validarDescuento();
             calcularTotales();
@@ -245,7 +238,6 @@
             }
         }
 
-        // Cálculo de totales
         function calcularTotales() {
             let subtotal = 0;
 
@@ -266,8 +258,6 @@
             document.getElementById("total").value = total.toFixed(2);
         }
     </script>
-
-
 </body>
 
 </html>
