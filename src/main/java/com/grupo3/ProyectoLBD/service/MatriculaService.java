@@ -18,13 +18,11 @@ public class MatriculaService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Llamar función de validación
     public Integer validarFactura(Integer idFactura) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("FIDE_PROYECTO_LBD_PCK")
                 .withFunctionName("FIDE_VALIDAR_FACTURA_PARA_MATRICULA_FN");
 
-        // Oracle devuelve NUMBER → Spring lo mapea como BigDecimal
         BigDecimal valor = call.executeFunction(BigDecimal.class, idFactura);
         return valor.intValue();
     }
@@ -47,9 +45,7 @@ public class MatriculaService {
         return valor.intValue();
     }
 
-    // Llamar a procedimiento de inserción
     public void insertarMatricula(
-            Integer idMatricula,
             Long cedula,
             Long cedulaInfante,
             Integer idFactura,
@@ -62,7 +58,6 @@ public class MatriculaService {
                 .withProcedureName("FIDE_MATRICULA_INSERT_SP");
 
         Map<String, Object> params = new HashMap<>();
-        params.put("P_ID_MATRICULA", idMatricula);
         params.put("P_CEDULA", cedula);
         params.put("P_CEDULA_INFANTE", cedulaInfante);
         params.put("P_ID_FACTURA", idFactura);
@@ -72,7 +67,6 @@ public class MatriculaService {
         call.execute(params);
     }
 
-    // Llamar procedimiento de actualización
     public void actualizarMatricula(
             Integer idMatricula,
             Long cedula,
@@ -97,7 +91,6 @@ public class MatriculaService {
         call.execute(params);
     }
 
-    // Llamar a procedimiento de eliminación o inactivación 
     public void eliminarMatricula(
             Integer idMatricula,
             Long cedula,

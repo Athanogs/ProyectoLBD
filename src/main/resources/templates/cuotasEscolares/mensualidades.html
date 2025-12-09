@@ -20,22 +20,18 @@
             <div class="card p-4">
                 <h2 class="mb-4">Lista de Mensualidades</h2>
 
-                <!-- FORMULARIO DE BÚSQUEDA -->
                 <form class="row g-3 mb-4" method="get" action="/mensualidades">
 
-                    <!-- Buscar por ID -->
                     <div class="col-md-4">
                         <input type="text" class="form-control" name="idMensualidad"
                             placeholder="Buscar por ID de mensualidad" th:value="${idMensualidad}">
                     </div>
 
-                    <!-- Buscar por nombre INFANTE -->
                     <div class="col-md-4">
                         <input type="text" class="form-control" name="nombreInfante"
                             placeholder="Buscar por nombre del infante" th:value="${nombreInfante}">
                     </div>
 
-                    <!-- Botones -->
                     <div class="col-md-4 d-flex gap-2">
                         <button type="submit" class="btn btn-primary mb-3">Buscar</button>
                         <a href="/mensualidades" class="btn btn-secondary mb-3">Limpiar</a>
@@ -44,9 +40,7 @@
                     </div>
                 </form>
 
-                <!-- TABLA DE RESULTADOS -->
                 <div class="tabla-scroll">
-
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -73,7 +67,6 @@
                                 <td th:text="${m.servicioMonto}"></td>
                                 <td th:text="${m.servicioMontoPagado}"></td>
 
-                                <!-- Botones -->
                                 <td>
                                     <a th:href="@{'/mensualidades/ver/' + ${m.idMensualidad}}"
                                         class="btn btn-info btn-sm">Ver</a>
@@ -107,8 +100,7 @@
 
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label>ID Mensualidad</label>
-                            <input type="number" name="idMensualidad" class="form-control" required>
+                            <input type="hidden" name="idMensualidad" class="form-control">
                         </div>
 
                         <div class="mb-3">
@@ -177,17 +169,13 @@
 <style>
     .tabla-scroll {
         max-height: calc(80vh - 100px);
-        /* Ajusta al alto de la pantalla */
         overflow-y: auto;
-        /* Scroll vertical */
         overflow-x: auto;
-        /* Scroll horizontal si hace falta */
         padding-right: 10px;
         border: 1px solid #ddd;
         background: white;
     }
 
-    /* Asegura que la tabla no se expanda */
     .tabla-scroll table {
         width: max-content;
         min-width: 100%;

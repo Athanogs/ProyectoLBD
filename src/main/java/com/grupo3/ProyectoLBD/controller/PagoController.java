@@ -56,7 +56,7 @@ public class PagoController {
     @GetMapping("/eliminar/{idPago}/{idFactura}")
     public String eliminarPago(
             @PathVariable Integer idPago,
-            @PathVariable Integer idFactura
+            @PathVariable Long idFactura
     ) {
         try {
             pagoService.eliminarPago(idPago, idFactura);
@@ -66,7 +66,4 @@ public class PagoController {
             return "redirect:/pagos?errorEliminar=true";            
         }
     }
-
-    
-
 }

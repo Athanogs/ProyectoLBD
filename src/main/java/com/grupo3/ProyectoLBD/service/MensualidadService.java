@@ -10,19 +10,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MensualidadService {
+
     private final JdbcTemplate jdbcTemplate;
 
     public MensualidadService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Llamar función de validación
     public Integer validarFactura(Integer idFactura) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("FIDE_PROYECTO_LBD_PCK")
                 .withFunctionName("FIDE_VALIDAR_FACTURA_PARA_MENSUALIDAD_FN");
 
-        // Oracle devuelve NUMBER → Spring lo mapea como BigDecimal
         BigDecimal valor = call.executeFunction(BigDecimal.class, idFactura);
         return valor.intValue();
     }
@@ -45,9 +44,7 @@ public class MensualidadService {
         return valor.intValue();
     }
 
-    // Llamar a procedimiento de inserción
     public void insertarMensualidad(
-            Integer idMensualidad,
             Long cedula,
             Long cedulaInfante,
             Integer idFactura,
@@ -60,7 +57,6 @@ public class MensualidadService {
                 .withProcedureName("FIDE_MENSUALIDAD_INSERT_SP");
 
         Map<String, Object> params = new HashMap<>();
-        params.put("P_ID_MENSUALIDAD", idMensualidad);
         params.put("P_CEDULA", cedula);
         params.put("P_CEDULA_INFANTE", cedulaInfante);
         params.put("P_ID_FACTURA", idFactura);
@@ -70,7 +66,6 @@ public class MensualidadService {
         call.execute(params);
     }
 
-    // Llamar procedimiento de actualización
     public void actualizarMensualidad(
             Integer idMensualidad,
             Long cedula,
@@ -94,8 +89,7 @@ public class MensualidadService {
 
         call.execute(params);
     }
-    
-    // Llamar a procedimiento de eliminación o inactivación 
+
     public void eliminarMensualidad(
             Integer idMensualidad,
             Long cedula,

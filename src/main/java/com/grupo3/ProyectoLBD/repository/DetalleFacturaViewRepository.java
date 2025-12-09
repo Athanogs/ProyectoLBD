@@ -11,5 +11,5 @@ import com.grupo3.ProyectoLBD.model.DetalleFacturaViewId;
 @Repository
 public interface DetalleFacturaViewRepository extends JpaRepository<DetalleFacturaView, DetalleFacturaViewId> {
 
-    List<DetalleFacturaView> findByIdFactura(Integer idFactura);
+    List<DetalleFacturaView> findByIdFactura(Long idFactura);
 }

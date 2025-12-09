@@ -1,146 +1,146 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<head th:replace="~{layout :: head('Gestión de Contactos')}"></head>
+<head th:replace="layout :: head('Gestión de Contactos')"></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <body>
+    <div class="d-flex">
+        <aside th:replace="layout :: sidebar"></aside>
 
-<!-- === LLAMADO CORRECTO AL LAYOUT === -->
-<div th:replace="~{layout :: layout(~{::content})}">
+        <main class="content">
+            <h1 class="mb-4">Gestión de Contactos</h1>
 
-    <!-- === CONTENIDO REAL DEL MÓDULO === -->
-    <th:block th:fragment="content">
+            <div class="card p-4">
+                <h2 class="mb-4">Lista de Contactos</h2>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    function confirmarEliminacion(event) {
+                        event.preventDefault();
 
-        <h1>Gestión de Contactos</h1>
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'Esta acción no se puede deshacer.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, eliminar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                event.target.submit();
+                            }
+                        });
+                    }
+                </script>
+                <script th:if="${error == 'correo'}">
+                    Swal.fire('Correo duplicado', 'Este correo ya existe.', 'error');
+                </script>
 
-        <!-- SWEETALERT -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script th:if="${error == 'telefono'}">
+                    Swal.fire('Teléfono duplicado', 'Este teléfono ya existe.', 'error');
+                </script>
 
-        <script>
-        function confirmarEliminacion(event) {
-            event.preventDefault();
+                <script th:if="${success == 'correo-agregado'}">
+                    Swal.fire('¡Éxito!', 'Correo agregado correctamente.', 'success');
+                </script>
 
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: 'Esta acción no se puede deshacer.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    event.target.submit();
-                }
-            });
-        }
-        </script>
+                <script th:if="${success == 'telefono-agregado'}">
+                    Swal.fire('¡Éxito!', 'Teléfono agregado correctamente.', 'success');
+                </script>
 
-        <!-- ERRORES -->
-        <script th:if="${error == 'correo'}">
-            Swal.fire('Correo duplicado', 'Este correo ya existe.', 'error');
-        </script>
+                <script th:if="${success == 'correo-eliminado'}">
+                    Swal.fire('¡Éxito!', 'Correo eliminado correctamente.', 'success');
+                </script>
 
-        <script th:if="${error == 'telefono'}">
-            Swal.fire('Teléfono duplicado', 'Este teléfono ya existe.', 'error');
-        </script>
+                <script th:if="${success == 'telefono-eliminado'}">
+                    Swal.fire('¡Éxito!', 'Teléfono eliminado correctamente.', 'success');
+                </script>
+                
+                <div class="tabla-scroll">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Nombre</th>
+                                <th>Correos</th>
+                                <th>Teléfonos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
 
-        <!-- ÉXITOS -->
-        <script th:if="${success == 'correo-agregado'}">
-            Swal.fire('¡Éxito!', 'Correo agregado correctamente.', 'success');
-        </script>
+                        <tbody>
+                            <tr th:each="c : ${contactos}">
+                                <td th:text="${c.cedula}"></td>
+                                <td th:text="${c.nombreCompleto}"></td>
+                                <td>
+                                    <div
+                                        th:each="correo : ${c.emails != null ? #strings.listSplit(c.emails, ', ') : {}}">
+                                        <span class="badge bg-primary me-2" th:text="${correo}"></span>
 
-        <script th:if="${success == 'telefono-agregado'}">
-            Swal.fire('¡Éxito!', 'Teléfono agregado correctamente.', 'success');
-        </script>
+                                        <form th:action="@{'/contactos/eliminar-correo/' + ${c.cedula}}" method="post"
+                                            class="d-inline" onsubmit="confirmarEliminacion(event)">
+                                            <input type="hidden" name="correo" th:value="${correo}">
+                                            <button class="btn btn-danger btn-sm"><i class="bi bi-x"></i></button>
+                                        </form>
+                                        <br>
+                                    </div>
+                                </td>
 
-        <script th:if="${success == 'correo-eliminado'}">
-            Swal.fire('¡Éxito!', 'Correo eliminado correctamente.', 'success');
-        </script>
+                                <td>
+                                    <div
+                                        th:each="tel : ${c.telefonos != null ? #strings.listSplit(c.telefonos, ', ') : {}}">
+                                        <span class="badge bg-success me-2" th:text="${tel}"></span>
 
-        <script th:if="${success == 'telefono-eliminado'}">
-            Swal.fire('¡Éxito!', 'Teléfono eliminado correctamente.', 'success');
-        </script>
+                                        <form th:action="@{'/contactos/eliminar-telefono/' + ${c.cedula}}" method="post"
+                                            class="d-inline" onsubmit="confirmarEliminacion(event)">
+                                            <input type="hidden" name="telefono" th:value="${tel}">
+                                            <button class="btn btn-danger btn-sm"><i class="bi bi-x"></i></button>
+                                        </form>
+                                        <br>
+                                    </div>
+                                </td>
 
-        <!-- TABLA -->
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-            <tr>
-                <th>Cédula</th>
-                <th>Nombre</th>
-                <th>Correos</th>
-                <th>Teléfonos</th>
-                <th>Acciones</th>
-            </tr>
-            </thead>
+                                <td>
+                                    <form th:action="@{'/contactos/agregar-correo/' + ${c.cedula}}" method="post"
+                                        class="mb-2 d-flex">
+                                        <input type="email" name="nuevoCorreo" class="form-control form-control-sm"
+                                            placeholder="Nuevo correo" required>
 
-            <tbody>
-            <tr th:each="c : ${contactos}">
+                                        <button class="btn btn-success btn-sm ms-2"><i class="bi bi-plus"></i></button>
+                                    </form>
 
-                <td th:text="${c.cedula}"></td>
-                <td th:text="${c.nombreCompleto}"></td>
+                                    <form th:action="@{'/contactos/agregar-telefono/' + ${c.cedula}}" method="post"
+                                        class="d-flex">
+                                        <input type="text" name="nuevoTelefono" class="form-control form-control-sm"
+                                            placeholder="Nuevo teléfono" required>
 
-                <!-- CORREOS -->
-                <td>
-                    <div th:each="correo : ${c.emails != null ? #strings.listSplit(c.emails, ', ') : {}}">
-                        <span class="badge bg-primary me-2" th:text="${correo}"></span>
-
-                        <form th:action="@{'/contactos/eliminar-correo/' + ${c.cedula}}"
-                              method="post" class="d-inline"
-                              onsubmit="confirmarEliminacion(event)">
-                            <input type="hidden" name="correo" th:value="${correo}">
-                            <button class="btn btn-danger btn-sm">✖</button>
-                        </form>
-                        <br>
-                    </div>
-                </td>
-
-                <!-- TELEFONOS -->
-                <td>
-                    <div th:each="tel : ${c.telefonos != null ? #strings.listSplit(c.telefonos, ', ') : {}}">
-                        <span class="badge bg-success me-2" th:text="${tel}"></span>
-
-                        <form th:action="@{'/contactos/eliminar-telefono/' + ${c.cedula}}"
-                              method="post" class="d-inline"
-                              onsubmit="confirmarEliminacion(event)">
-                            <input type="hidden" name="telefono" th:value="${tel}">
-                            <button class="btn btn-danger btn-sm">✖</button>
-                        </form>
-                        <br>
-                    </div>
-                </td>
-
-                <!-- FORMULARIOS DE AGREGAR -->
-                <td>
-
-                    <!-- NUEVO CORREO -->
-                    <form th:action="@{'/contactos/agregar-correo/' + ${c.cedula}}"
-                          method="post" class="mb-2 d-flex">
-                        <input type="email" name="nuevoCorreo"
-                               class="form-control form-control-sm"
-                               placeholder="Nuevo correo" required>
-
-                        <button class="btn btn-success btn-sm ms-2">➕</button>
-                    </form>
-
-                    <!-- NUEVO TELEFONO -->
-                    <form th:action="@{'/contactos/agregar-telefono/' + ${c.cedula}}"
-                          method="post" class="d-flex">
-                        <input type="text" name="nuevoTelefono"
-                               class="form-control form-control-sm"
-                               placeholder="Nuevo teléfono" required>
-
-                        <button class="btn btn-primary btn-sm ms-2">📞</button>
-                    </form>
-
-                </td>
-
-            </tr>
-            </tbody>
-        </table>
-
-    </th:block>
-
-</div>
-
+                                        <button class="btn btn-primary btn-sm ms-2"><i class="bi bi-telephone"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
+<style>
+    aside {
+        flex-shrink: 0;
+    }
+
+    .tabla-scroll {
+        max-height: calc(85vh - 100px);
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        background: white;
+        padding-right: 10px;
+    }
+
+    .tabla-scroll .table {
+        min-width: 1200px;
+    }
+</style>
+
 </html>
