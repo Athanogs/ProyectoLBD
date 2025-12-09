@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class DetalleFacturaView {
     @Id
     @Column(name = "ID_FACTURA")
-    private Integer idFactura;
+    private Long idFactura;
 
     @Id
     @Column(name = "ID_SERVICIO")
@@ -26,11 +26,11 @@ public class DetalleFacturaView {
     @Column(name = "ESTADO")
     private String estado;
 
-    public Integer getIdFactura() {
+    public Long getIdFactura() {
         return idFactura;
     }
 
-    public void setIdFactura(Integer idFactura) {
+    public void setIdFactura(Long idFactura) {
         this.idFactura = idFactura;
     }
 

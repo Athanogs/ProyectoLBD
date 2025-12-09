@@ -74,10 +74,8 @@ public class MensualidadesController {
         return "cuotasEscolares/detalleMensualidad";
     }
 
-
     @PostMapping("/agregar")
     public String agregarMensualidad(
-            @RequestParam Integer idMensualidad,
             @RequestParam Long cedulaApoderado,
             @RequestParam Long cedulaInfante,
             @RequestParam Integer idFactura,
@@ -127,7 +125,6 @@ public class MensualidadesController {
 
         try {
             mensualidadService.insertarMensualidad(
-                    idMensualidad,
                     cedulaApoderado,
                     cedulaInfante,
                     idFactura,

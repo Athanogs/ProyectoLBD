@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class DetalleFacturaViewId implements Serializable {
 
-    private Integer idFactura;
+    private Long idFactura;
     private Integer idServicio;
 
     public DetalleFacturaViewId() {}
 
-    public DetalleFacturaViewId(Integer idFactura, Integer idServicio) {
+    public DetalleFacturaViewId(Long idFactura, Integer idServicio) {
         this.idFactura = idFactura;
         this.idServicio = idServicio;
     }

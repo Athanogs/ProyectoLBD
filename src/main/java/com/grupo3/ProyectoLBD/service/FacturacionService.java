@@ -1,23 +1,25 @@
 package com.grupo3.ProyectoLBD.service;
 
 import java.math.BigDecimal;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
+import com.grupo3.ProyectoLBD.model.DetalleFacturaView;
+import com.grupo3.ProyectoLBD.model.EncabezadoFacturaView;
 import com.grupo3.ProyectoLBD.model.FideMetodoPagoTb;
 import com.grupo3.ProyectoLBD.model.FideServicioTb;
-import com.grupo3.ProyectoLBD.model.EncabezadoFacturaView;
-import com.grupo3.ProyectoLBD.model.DetalleFacturaView;
+import com.grupo3.ProyectoLBD.repository.DetalleFacturaViewRepository;
+import com.grupo3.ProyectoLBD.repository.EncabezadoFacturaViewRepository;
 import com.grupo3.ProyectoLBD.repository.MetodoPagoRepository;
 import com.grupo3.ProyectoLBD.repository.ServicioRepository;
-import com.grupo3.ProyectoLBD.repository.EncabezadoFacturaViewRepository;
-import com.grupo3.ProyectoLBD.repository.DetalleFacturaViewRepository;
 
 @Service
 public class FacturacionService {
@@ -50,7 +52,7 @@ public class FacturacionService {
         return servicioRepo.findByIdEstado(1);
     }
 
-    public EncabezadoFacturaView obtenerEncabezado(int idFactura) {
+    public EncabezadoFacturaView obtenerEncabezado(Long idFactura) {
         List<EncabezadoFacturaView> lista = encabezadoFacturaRepo.findByIdFactura(idFactura);
 
         if (lista == null || lista.isEmpty()) {
@@ -60,7 +62,7 @@ public class FacturacionService {
         return lista.get(0);
     }
 
-    public List<DetalleFacturaView> obtenerDetalle(Integer idFactura) {
+    public List<DetalleFacturaView> obtenerDetalle(Long idFactura) {
         return detalleFacturaRepo.findByIdFactura(idFactura);
     }
 
@@ -82,8 +84,7 @@ public class FacturacionService {
         return valor.intValue();
     }
 
-    public void insertarEncabezadoFactura(
-            Integer idFactura,
+    public Long insertarEncabezadoFactura(
             Long cedula,
             Long cedulaInfante,
             LocalDate fechaEmision,
@@ -96,11 +97,10 @@ public class FacturacionService {
     ) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("FIDE_PROYECTO_LBD_PCK")
-                .withProcedureName("FIDE_ENCABEZADO_FACTURA_INSERT_SP");
+                .withProcedureName("FIDE_ENCABEZADO_FACTURA_INSERT_SP")
+                .declareParameters(new SqlOutParameter("O_ID_FACTURA", Types.NUMERIC));
 
         Map<String, Object> params = new HashMap<>();
-
-        params.put("P_ID_FACTURA", idFactura);
         params.put("P_CEDULA", cedula);
         params.put("P_CEDULA_INFANTE", cedulaInfante);
         params.put("P_FECHA_EMISION", fechaEmision);
@@ -112,11 +112,14 @@ public class FacturacionService {
         params.put("P_ID_METODO_PAGO", idMetodoPago);
         params.put("P_ID_ESTADO", 3);
 
-        call.execute(params);
+        Map<String, Object> result = call.execute(params);
+        BigDecimal idFactura = (BigDecimal) result.get("O_ID_FACTURA");
+
+        return idFactura != null ? idFactura.longValue() : null;
     }
 
     public void insertarDetalleFactura(
-            Integer idFactura,
+            Long idFactura,
             Integer idServicio,
             BigDecimal montoPagado
     ) {
@@ -134,27 +137,25 @@ public class FacturacionService {
         call.execute(params);
     }
 
-    public void eliminarEncabezadoFactura(Integer idFactura) {
+    public void eliminarEncabezadoFactura(Long idFactura) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
-            .withCatalogName("FIDE_PROYECTO_LBD_PCK")
-            .withProcedureName("FIDE_ENCABEZADO_FACTURA_DELETE_SP");
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withProcedureName("FIDE_ENCABEZADO_FACTURA_DELETE_SP");
 
         Map<String, Object> params = new HashMap<>();
         params.put("P_ID_FACTURA", idFactura);
         call.execute(params);
     }
 
-    public void eliminarDetalleFactura(Integer idFactura, Integer idServicio) {
+    public void eliminarDetalleFactura(Long idFactura, Integer idServicio) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
-            .withCatalogName("FIDE_PROYECTO_LBD_PCK")
-            .withProcedureName("FIDE_DETALLE_FACTURA_DELETE_SP");
+                .withCatalogName("FIDE_PROYECTO_LBD_PCK")
+                .withProcedureName("FIDE_DETALLE_FACTURA_DELETE_SP");
 
         Map<String, Object> params = new HashMap<>();
         params.put("P_ID_FACTURA", idFactura);
         params.put("P_ID_SERVICIO", idServicio);
         call.execute(params);
     }
-
-    
 
 }
