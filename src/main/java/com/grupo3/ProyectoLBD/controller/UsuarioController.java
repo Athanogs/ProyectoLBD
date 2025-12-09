@@ -2,6 +2,8 @@ package com.grupo3.ProyectoLBD.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import com.grupo3.ProyectoLBD.repository.PersonaUsuarioRolViewRepository;
 import com.grupo3.ProyectoLBD.repository.ProvinciaRepository;
 import com.grupo3.ProyectoLBD.repository.RolRepository;
 import com.grupo3.ProyectoLBD.repository.UsuarioRepository;
+import com.grupo3.ProyectoLBD.security.CustomUserDetails;
 import com.grupo3.ProyectoLBD.service.UsuarioService;
 
 @Controller
@@ -60,6 +63,11 @@ public class UsuarioController {
             @RequestParam(required = false) String nombre,
             Model model
     ) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+        Long cedulaActual = userDetails.getUsuario().getPersona().getCedula();
+
+
         List<PersonaUsuarioRolView> lista;
         if (cedula != null && !cedula.isEmpty()) {
             Long ced = Long.valueOf(cedula);  
@@ -71,6 +79,11 @@ public class UsuarioController {
         } else {
             lista = personaViewRepo.findbyIdEstado();
         }
+
+        lista = lista.stream()
+            .filter(u -> !u.getCedula().equals(cedulaActual))
+            .toList();
+            
         model.addAttribute("listaUsuarios", lista);
         model.addAttribute("cedula", cedula);
         model.addAttribute("nombre", nombre);
