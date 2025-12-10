@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,12 +46,12 @@ public class ActividadController {
     // FORMULARIO NUEVA ACTIVIDAD
     @GetMapping("/nueva")
     public String nuevaActividad(Model model) {
-        ActividadForm form = new ActividadForm();
-        form.setIdEstado(1); // activo por defecto
-        model.addAttribute("actividadForm", form);
-        model.addAttribute("grupos", grupoRepo.findAll());
-        model.addAttribute("modoEdicion", false);
-        return "actividades/form";
+    ActividadForm form = new ActividadForm();
+    form.setIdEstado(1);
+    model.addAttribute("actividadForm", form);
+    model.addAttribute("grupos", grupoRepo.findAll());
+    model.addAttribute("modoEdicion", false);
+    return "actividades/form";
     }
 
     // FORMULARIO EDITAR ACTIVIDAD
@@ -100,7 +101,8 @@ public class ActividadController {
         }
     }
 
-    // ACTUALIZAR ACTIVIDAD
+     
+    //ACTUALIZAR ACTIVIDAD
     @PostMapping("/actualizar")
     public String actualizarActividad(@ModelAttribute ActividadForm actividadForm, Model model) {
         try {
@@ -125,7 +127,9 @@ public class ActividadController {
             model.addAttribute("modoEdicion", true);
             return "actividades/form";
         }
-    }
+    } 
+
+ 
 
     // ELIMINAR ACTIVIDAD + RELACIONES GRUPOS
     @GetMapping("/eliminar/{idActividad}")
