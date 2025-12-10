@@ -5,7 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
+
 import javax.sql.DataSource;
+
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,23 +58,38 @@ public class ActividadService {
                 .withProcedureName("FIDE_ACTIVIDAD_POR_GRUPO_DELETE_SP");
     }
 
-    // CREAR ACTIVIDAD + ASIGNAR GRUPOS
-    public void crearActividad(ActividadForm form) {
-        Map<String, Object> params = buildParamsActividad(form);
-        insertActividadCall.execute(params);
 
-        if (form.getIdGrupos() != null) {
-            for (Integer idGrupo : form.getIdGrupos()) {
-                Map<String, Object> paramsGrupo = new HashMap<>();
-                paramsGrupo.put("P_ID_ACTIVIDAD", form.getIdActividad());
-                paramsGrupo.put("P_ID_GRUPO", idGrupo);
-                paramsGrupo.put("P_ID_ESTADO", 1); // activo por defecto
-                insertActividadGrupoCall.execute(paramsGrupo);
-            }
+ // CREAR ACTIVIDAD + ASIGNAR GRUPOS
+public void crearActividad(ActividadForm form) {
+
+    Map<String, Object> params = buildParamsActividad(form);
+
+    // Ejecutar SP que incluye el parámetro OUT
+    Map<String, Object> result = insertActividadCall.execute(params);
+
+    // Recuperar el ID devuelto por Oracle (que viene como BigDecimal)
+    BigDecimal idGeneradoBD = (BigDecimal) result.get("O_ID_ACTIVIDAD");
+    Integer nuevoId = idGeneradoBD.intValue();  // ← Conversión correcta
+
+    // Guardarlo en el form
+    form.setIdActividad(nuevoId);
+
+    // Insertar los grupos seleccionados
+    if (form.getIdGrupos() != null) {
+        for (Integer idGrupo : form.getIdGrupos()) {
+            Map<String, Object> paramsGrupo = new HashMap<>();
+            paramsGrupo.put("P_ID_ACTIVIDAD", nuevoId);
+            paramsGrupo.put("P_ID_GRUPO", idGrupo);
+            paramsGrupo.put("P_ID_ESTADO", 1);
+            insertActividadGrupoCall.execute(paramsGrupo);
         }
     }
+}
 
-    // ACTUALIZAR ACTIVIDAD + GRUPOS
+
+
+
+     //ACTUALIZAR ACTIVIDAD + GRUPOS
     public void actualizarActividad(ActividadForm form, List<Integer> gruposExistentes) {
         Map<String, Object> params = buildParamsActividad(form);
         updateActividadCall.execute(params);
@@ -108,6 +126,8 @@ public class ActividadService {
 }
         }
     }
+
+
 
     // ELIMINAR ACTIVIDAD + RELACIONES GRUPOS
     public void eliminarActividad(Integer idActividad, List<Integer> grupos) {
