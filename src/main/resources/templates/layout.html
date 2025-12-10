@@ -24,7 +24,7 @@
 
     <nav class="menu">
         <div th:if="${rol == 'ADMINISTRADOR'}">
-
+            <a th:href="@{/home}" class="item">Home</a>
             <a th:href="@{/usuarios}" class="item">Gestión de Usuarios</a>
             <a th:href="@{/docentes}" class="item">Gestión de Docentes</a>
             <a th:href="@{/infantes}" class="item">Gestión de Infantes</a>
