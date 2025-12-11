@@ -2,15 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head th:replace="layout :: head('Gestión de Facturas')"></head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <body>
 
     <div class="layout-container">
 
-        <!-- Cargar el sidebar -->
         <aside th:replace="layout :: sidebar"></aside>
 
-        <!-- CONTENIDO PROPIO (NO VIENE DE LAYOUT) -->
         <main class="content">
 
             <h1 class="mb-4">Gestión de Facturas</h1>
@@ -22,35 +21,29 @@
             <div class="card p-4">
                 <h2 class="mb-4">Lista de Facturas Registradas</h2>
 
-                <!-- FORMULARIO DE BÚSQUEDA -->
                 <form class="row g-3 mb-4" method="get" action="/facturacion/gestionFacturas">
 
-                    <!-- Buscar por ID -->
                     <div class="col-md-4">
                         <input type="text" class="form-control" name="idFactura" placeholder="Buscar por ID de factura"
                             th:value="${idFactura}">
                     </div>
 
-                    <!-- Buscar por nombre apoderado -->
                     <div class="col-md-4">
                         <input type="text" class="form-control" name="cedulaApoderado"
                             placeholder="Buscar por cédula del apoderado" th:value="${cedulaApoderado}">
                     </div>
 
-                    <!-- Botones -->
                     <div class="col-md-4 d-flex gap-2">
                         <button type="submit" class="btn btn-primary mb-3">Buscar</button>
                         <a href="/facturacion/gestionFacturas" class="btn btn-secondary mb-3">Limpiar</a>
                     </div>
                 </form>
 
-                <!-- TABLA DE RESULTADOS -->
                 <div class="tabla-scroll">
-
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>ID de la Factura</th>
                                 <th>Cédula Apoderado</th>
                                 <th>Cédula Infante</th>
                                 <th>Fecha de Emisión</th>
@@ -61,7 +54,7 @@
                                 <th>Monto Total</th>
                                 <th>Método de Pago</th>
                                 <th>Estado</th>
-                                <th>Acciones</th> <!-- Nueva columna -->
+                                <th>Acciones</th>
                             </tr>
                         </thead>
 
@@ -79,13 +72,12 @@
                                 <td th:text="${f.metodoPago}"></td>
                                 <td th:text="${f.estado}"></td>
 
-                                <!-- Botones -->
                                 <td>
-                                    <a th:href="@{'/facturacion/ver/' + ${f.idFactura}}" class="btn btn-info btn-sm">Ver Detalle</a>
+                                    <a th:href="@{'/facturacion/ver/' + ${f.idFactura}}" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
 
                                     <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modalEliminar" th:attr="data-id=${f.idFactura}">
-                                        Eliminar
+                                        <i class="bi bi-trash-fill"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -120,18 +112,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 <style>
+    aside {
+        flex-shrink: 0;
+    }
+
     .tabla-scroll {
         max-height: calc(80vh - 100px);
         overflow-y: auto;
-        overflow-x: auto;
-        padding-right: 10px;
         border: 1px solid #ddd;
         background: white;
+        padding-right: 10px;
     }
 
     .tabla-scroll table {
-        width: max-content;
-        min-width: 100%;
+        min-width: 1200px;
     }
 </style>
 <script>

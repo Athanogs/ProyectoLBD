@@ -18,7 +18,7 @@ public class PagosView {
 
     @Id
     @Column(name = "ID_FACTURA")
-    private Integer idFactura;
+    private Long idFactura;
 
     @Column(name = "FECHA_EMISION")
     private LocalDate fechaEmision;
@@ -43,11 +43,11 @@ public class PagosView {
         this.idPago = idPago;
     }
 
-    public Integer getIdFactura() {
+    public Long getIdFactura() {
         return idFactura;
     }
 
-    public void setIdFactura(Integer idFactura) {
+    public void setIdFactura(Long idFactura) {
         this.idFactura = idFactura;
     }
 

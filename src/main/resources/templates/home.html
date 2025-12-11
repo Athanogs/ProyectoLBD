@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head('Inicio')"></head>
+
+<body>
+    <div class="d-flex">
+        <aside th:replace="layout :: sidebar"></aside>
+
+        <main class="content">
+            <h1>Bienvenido, <span th:text="${nombreCompleto}"></span></h1>
+            <p>Selecciona una opción del menú lateral.</p>
+
+            <div class="card p-4">
+                <h2 class="mb-4">Resumen General</h2>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Total de Administradores</h5>
+                            <h2 th:text="${totalAdministradores}"></h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Total de Docentes</h5>
+                            <h2 th:text="${totalDocentes}"></h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Total de Apoderados</h5>
+                            <h2 th:text="${totalApoderados}"></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Total de Infantes</h5>
+                            <h2 th:text="${totalInfantes}"></h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Total de Grupos</h5>
+                            <h2 th:text="${totalGrupos}"></h2>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Asistencia de Infantes Hoy</h5>
+                            <h2 th:text="${totalAsistencias}"></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="card text-center p-3">
+                            <h5>Facturas Registradas Hoy</h5>
+                            <h2 th:text="${totalFacturas}"></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

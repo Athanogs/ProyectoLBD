@@ -26,14 +26,12 @@ public class InfanteGestionService {
         return viewRepository.findByEstado(1);
     }
 
-
     // ============================
     // LISTAR INACTIVOS (vista)
     // ============================
     public List<InfanteGestionView> listarInactivos() {
         return viewRepository.findByEstado(2);
     }
-
 
     // ============================
     // BUSCAR EN LA VISTA
@@ -42,14 +40,12 @@ public class InfanteGestionService {
         return viewRepository.buscarInfantes(cedula, nombre);
     }
 
-
     // ============================
     // BUSCAR SOLO POR CÉDULA
     // ============================
     public InfanteGestionView buscarPorCedula(String cedula) {
         return viewRepository.findById(cedula).orElse(null);
     }
-
 
     // ============================
     // CREAR EN TABLA REAL
@@ -59,14 +55,12 @@ public class InfanteGestionService {
         tablaRepository.save(infante);
     }
 
-
     // ============================
     // ACTUALIZAR
     // ============================
     public void actualizarInfante(FideInfanteTb infante) {
         tablaRepository.save(infante);
     }
-
 
     // ============================
     // ELIMINAR (CAMBIAR A INACTIVO)
@@ -79,4 +73,16 @@ public class InfanteGestionService {
             tablaRepository.save(infante);
         }
     }
+
+    // =======================================================
+    // LISTAR INFANTES POR APODERADO (CORREGIDO)
+    // =======================================================
+    public List<InfanteGestionView> listarInfantesPorApoderado(Long cedulaApoderado) {
+
+        // Convertimos Long → String porque la vista usa VARCHAR2
+        String cedula = String.valueOf(cedulaApoderado);
+
+        return viewRepository.findByCedulaPadre(cedula);
+    }
+
 }

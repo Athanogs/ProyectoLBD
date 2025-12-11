@@ -3,7 +3,7 @@ package com.grupo3.ProyectoLBD.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "FIDE_CAPACITACION_VW")
+@Table(name = "FIDE_CAPACITACION_V")
 @IdClass(CapacitacionViewId.class)
 public class CapacitacionView {
 

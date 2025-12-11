@@ -39,16 +39,13 @@ public class MatriculasController {
 
         String infante = (nombreInfante == null) ? "" : nombreInfante;
 
-        // Filtro por nombre del infante 
         if (!infante.isEmpty()) {
             lista = matriculasViewRepository
                     .findByInfanteNombreContainingIgnoreCase(infante);
 
-            // Filtro por ID de matrícula
         } else if (idMatricula != null) {
             lista = matriculasViewRepository.findByIdMatricula(idMatricula);
 
-            // Mostrar todo
         } else {
             lista = matriculasViewRepository.findByEstadoMatriculaNot("INACTIVO");
         }
@@ -79,7 +76,6 @@ public class MatriculasController {
 
     @PostMapping("/agregar")
     public String agregarMatricula(
-            @RequestParam Integer idMatricula,
             @RequestParam Long cedulaApoderado,
             @RequestParam Long cedulaInfante,
             @RequestParam Integer idFactura,
@@ -128,10 +124,9 @@ public class MatriculasController {
         }
 
         try {
-            LocalDate fecha = LocalDate.parse(fechaMatricula); // Convierte de String a LocalDate
+            LocalDate fecha = LocalDate.parse(fechaMatricula); 
 
             matriculaService.insertarMatricula(
-                    idMatricula,
                     cedulaApoderado,
                     cedulaInfante,
                     idFactura,
@@ -168,7 +163,6 @@ public class MatriculasController {
 
         MatriculasView m = matriculasViewRepository.findByIdMatricula(idMatricula).get(0);
 
-        // Validar factura
         Integer validacion = matriculaService.validarFactura(idFactura);
 
         if (validacion == null || validacion == 0) {
@@ -185,7 +179,6 @@ public class MatriculasController {
             return "cuotasEscolares/editarMatricula";
         }
 
-        // Llamar a procedimiento de actualización
         try {
             matriculaService.actualizarMatricula(
                     m.getIdMatricula(),

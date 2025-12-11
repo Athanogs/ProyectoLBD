@@ -1,104 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
-<!-- Cargar el head desde el layout -->
 <head th:replace="layout :: head('Gestión de Usuarios')"></head>
 
 <body>
+    <div class="d-flex">
+        <aside th:replace="layout :: sidebar"></aside>
 
-<div class="d-flex">
+        <main class="content">
+            <h1 class="mb-4">Gestión de Usuarios</h1>
 
-    <!-- Cargar el sidebar desde el layout -->
-    <aside th:replace="layout :: sidebar"></aside>
+            <div class="card p-4">
+                <h2 class="mb-4">Lista de Usuarios</h2>
 
-    <!-- CONTENIDO PROPIO DE LA VISTA -->
-    <main class="content">
+                <form class="row g-3 mb-4" method="get" action="/usuarios">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="cedula" placeholder="Buscar por cédula" th:value="${cedula}">
+                    </div>
 
-        <h1 class="mb-4">Gestión de Usuarios</h1>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="nombre" placeholder="Buscar por nombre o apellido" th:value="${nombre}">
+                    </div>
 
-        <div class="card p-4">
-            <h2 class="mb-4">Lista de Usuarios</h2>
-            <a href="/usuarios/nuevo" class="btn btn-primary">
-                + Crear Persona
-            </a>
+                    <div class="col-md-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary mb-3">Buscar</button>
+                        <a href="/usuarios" class="btn btn-secondary mb-3">Limpiar</a>
+                        <a href="/usuarios/nuevo" class="btn btn-primary mb-3"> + Crear Persona </a>
+                    </div>
+                </form>
 
-            <!-- FORMULARIO DE BÚSQUEDA -->
-            <form class="row g-3 mb-4" method="get" action="/usuarios">
+                <div class="tabla-scroll">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Nombre</th>
+                                <th>Apellido Paterno</th>
+                                <th>Apellido Materno</th>
+                                <th>Fecha Nacimiento</th>
+                                <th>Username</th>
+                                <th>Contraseña</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
 
-                <!-- Buscar por cédula -->
-                <div class="col-md-4">
-                    <input type="text"
-                           class="form-control"
-                           name="cedula"
-                           placeholder="Buscar por cédula"
-                           th:value="${cedula}">
+                        <tbody>
+                            <tr th:each="u : ${listaUsuarios}">
+                                <td th:text="${u.cedula}"></td>
+                                <td th:text="${u.nombre}"></td>
+                                <td th:text="${u.apellidoPaterno}"></td>
+                                <td th:text="${u.apellidoMaterno}"></td>
+                                <td th:text="${u.fechaNacimiento}"></td>
+                                <td th:text="${u.username}"></td>
+                                <td th:text="${u.contrasena}"></td>
+                                <td th:text="${u.rol}"></td>
+
+                                <td class="text-center">
+                                    <a th:href="@{'/usuarios/editar/' + ${u.cedula}}" class="btn btn-warning btn-sm">Editar</a>
+                                    <a th:href="@{'/usuarios/eliminar/' + ${u.cedula}}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este usuario?');">Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <!-- Buscar por nombre o apellido -->
-                <div class="col-md-4">
-                    <input type="text"
-                           class="form-control"
-                           name="nombre"
-                           placeholder="Buscar por nombre o apellido"
-                           th:value="${nombre}">
-                </div>
-
-                <!-- Botones -->
-                <div class="col-md-4 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                    <a href="/usuarios" class="btn btn-secondary">Limpiar</a>
-                </div>
-
-            </form>
-
-            <!-- TABLA DE RESULTADOS -->
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Cédula</th>
-                    <th>Nombre</th>
-                    <th>Apellido Paterno</th>
-                    <th>Apellido Materno</th>
-                    <th>Fecha Nacimiento</th>
-                    <th>Username</th>
-                    <th>Contraseña</th>
-                    <th>Rol</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="u : ${listaUsuarios}">
-                    <td th:text="${u.cedula}"></td>
-                    <td th:text="${u.nombre}"></td>
-                    <td th:text="${u.apellidoPaterno}"></td>
-                    <td th:text="${u.apellidoMaterno}"></td>
-                    <td th:text="${u.fechaNacimiento}"></td>
-                    <td th:text="${u.username}"></td>
-                    <td th:text="${u.contrasena}"></td>
-                    <td th:text="${u.rol}"></td>
-
-                    <td>
-                    <!--    <a th:href="@{'/usuarios/ver/' + ${u.cedula}}"
-                           class="btn btn-info btn-sm">Ver</a>-->
-
-                        <a th:href="@{'/usuarios/editar/' + ${u.cedula}}"
-                           class="btn btn-warning btn-sm">Editar</a>
-
-                        <a th:href="@{'/usuarios/eliminar/' + ${u.cedula}}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Eliminar este usuario?');">
-                            Eliminar
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
-
-</div>
+            </div>
+        </main>
+    </div>
 
 </body>
+<style>
+    aside {
+        flex-shrink: 0;
+    }
+    
+    .tabla-scroll {
+        max-height: calc(80vh - 100px);
+        overflow-y: auto;
+        overflow-x: auto;
+        padding-right: 10px;
+        border: 1px solid #ddd;
+        background: white;
+    }
+
+    .tabla-scroll table {
+        width: max-content;
+        min-width: 100%;
+    }
+</style>
+
 </html>

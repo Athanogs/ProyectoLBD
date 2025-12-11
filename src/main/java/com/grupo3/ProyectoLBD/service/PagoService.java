@@ -1,4 +1,5 @@
 package com.grupo3.ProyectoLBD.service;
+
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PagoService {
+
     private final JdbcTemplate jdbcTemplate;
 
     public PagoService(JdbcTemplate jdbcTemplate) {
@@ -18,8 +20,7 @@ public class PagoService {
     }
 
     public void insertarPago(
-            Integer idPago,
-            Integer idFactura,
+            Long idFactura,
             BigDecimal montoTotal
     ) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
@@ -28,23 +29,22 @@ public class PagoService {
 
         Map<String, Object> params = new HashMap<>();
 
-        params.put("P_ID_FACTURA", idPago);
-        params.put("P_ID_SERVICIO", idFactura);
-        params.put("P_MONTO_PAGADO", montoTotal);
+        params.put("P_ID_FACTURA", idFactura);
+        params.put("P_MONTO_TOTAL", montoTotal);
         params.put("P_ID_ESTADO", 1);
 
         call.execute(params);
     }
 
-    public void eliminarPago(Integer idPago, Integer idFactura) {
+    public void eliminarPago(Integer idPago, Long idFactura) {
         SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
                 .withCatalogName("FIDE_PROYECTO_LBD_PCK")
                 .withProcedureName("FIDE_PAGO_DELETE_SP")
                 .withoutProcedureColumnMetaDataAccess()
                 .declareParameters(
-                    new SqlParameter("P_ID_PAGO", Types.INTEGER),
-                    new SqlParameter("P_ID_FACTURA", Types.INTEGER)
-            );
+                        new SqlParameter("P_ID_PAGO", Types.INTEGER),
+                        new SqlParameter("P_ID_FACTURA", Types.NUMERIC)
+                );
 
         Map<String, Object> params = new HashMap<>();
         params.put("P_ID_PAGO", idPago);
@@ -52,5 +52,5 @@ public class PagoService {
 
         call.execute(params);
     }
-    
+
 }

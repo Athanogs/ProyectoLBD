@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(ActividadGrupo.class)
 @Table(name = "FIDE_ACTIVIDAD_GRUPO_V")
 public class ActividadGrupoView {
 

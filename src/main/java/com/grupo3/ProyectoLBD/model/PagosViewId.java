@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class PagosViewId implements Serializable {
     private Integer idPago;
-    private Integer idFactura;
+    private Long idFactura;
 
     public PagosViewId() {}
 
-    public PagosViewId(Integer idPago, Integer idFactura) {
+    public PagosViewId(Integer idPago, Long idFactura) {
         this.idPago = idPago;
         this.idFactura = idFactura;
     }

@@ -19,17 +19,23 @@ import com.grupo3.ProyectoLBD.model.DetalleFacturaView;
 import com.grupo3.ProyectoLBD.model.EncabezadoFacturaView;
 import com.grupo3.ProyectoLBD.repository.EncabezadoFacturaViewRepository;
 import com.grupo3.ProyectoLBD.service.FacturacionService;
+import com.grupo3.ProyectoLBD.service.PagoService;
+
 
 @Controller
 @RequestMapping("/facturacion")
 public class FacturacionController {
 
+    private final PagoService pagoService;
     private final FacturacionService facturacionService;
     private final EncabezadoFacturaViewRepository encabezadoFacturaViewRepository;
 
-    public FacturacionController(FacturacionService facturacionService, EncabezadoFacturaViewRepository encabezadoFacturaViewRepository) {
+    
+
+    public FacturacionController(FacturacionService facturacionService, EncabezadoFacturaViewRepository encabezadoFacturaViewRepository, PagoService pagoService) {
         this.facturacionService = facturacionService;
         this.encabezadoFacturaViewRepository = encabezadoFacturaViewRepository;
+        this.pagoService = pagoService;
     }
 
     @GetMapping("/opciones")
@@ -46,7 +52,7 @@ public class FacturacionController {
 
     @GetMapping("/gestionFacturas")
     public String mostrarModuloGestion(
-            @RequestParam(required = false) Integer idFactura,
+            @RequestParam(required = false) Long idFactura,
             @RequestParam(required = false) String cedulaApoderado,
             Model model
     ) {
@@ -72,7 +78,6 @@ public class FacturacionController {
 
     @PostMapping("/guardar")
     public String guardarFactura(
-            @RequestParam Integer idFactura,
             @RequestParam Long cedula,
             @RequestParam Long cedulaInfante,
             @RequestParam String fechaEmision,
@@ -114,8 +119,7 @@ public class FacturacionController {
         try {
             LocalDate fecha = LocalDate.parse(fechaEmision);
             String hora = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-            facturacionService.insertarEncabezadoFactura(
-                    idFactura,
+            Long idFactura = facturacionService.insertarEncabezadoFactura(
                     cedula,
                     cedulaInfante,
                     fecha,
@@ -128,12 +132,10 @@ public class FacturacionController {
             );
 
             for (int i = 0; i < idServicios.size(); i++) {
-                facturacionService.insertarDetalleFactura(
-                        idFactura,
-                        idServicios.get(i),
-                        montos.get(i)
-                );
+                facturacionService.insertarDetalleFactura(idFactura, idServicios.get(i), montos.get(i));
+                pagoService.insertarPago(idFactura, montos.get(i));
             }
+
             redirect.addFlashAttribute("mensajeTipo", "success");
             redirect.addFlashAttribute("mensaje", "Factura registrada con éxito.");
             return "redirect:/facturacion/facturacionServicios";
@@ -145,7 +147,7 @@ public class FacturacionController {
     }
 
     @GetMapping("/ver/{idFactura}")
-    public String verFactura(@PathVariable int idFactura, Model model) {
+    public String verFactura(@PathVariable long idFactura, Model model) {
         EncabezadoFacturaView encabezado = facturacionService.obtenerEncabezado(idFactura);
         List<DetalleFacturaView> detalle = facturacionService.obtenerDetalle(idFactura);
 
@@ -156,7 +158,7 @@ public class FacturacionController {
     }
 
     @GetMapping("/eliminar/{idFactura}")
-    public String eliminarFactura(@PathVariable("idFactura") Integer idFactura, RedirectAttributes redirect) {
+    public String eliminarFactura(@PathVariable("idFactura") Long idFactura, RedirectAttributes redirect) {
         try {
             List<DetalleFacturaView> detalles = facturacionService.obtenerDetalle(idFactura);
 

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 public class EncabezadoFacturaView {
     @Id
     @Column(name = "ID_FACTURA")
-    private Integer idFactura;
+    private Long idFactura;
 
     @Column(name = "CEDULA_APODERADO")
     private Long cedulaApoderado;
@@ -50,11 +50,11 @@ public class EncabezadoFacturaView {
     @Column(name = "ESTADO")
     private String estado;
 
-    public Integer getIdFactura() {
+    public Long getIdFactura() {
         return idFactura;
     }
 
-    public void setIdFactura(Integer idFactura) {
+    public void setIdFactura(Long idFactura) {
         this.idFactura = idFactura;
     }
 
