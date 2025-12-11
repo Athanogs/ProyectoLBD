@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "FIDE_EVALUACION_DOCENTE_VW")
+@Table(name = "FIDE_EVALUACION_DOCENTE_V")
 public class EvaluacionDocenteView {
 
     @EmbeddedId
