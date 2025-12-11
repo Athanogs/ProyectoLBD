@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "FIDE_FORMACION_ACADEMICA_VW")
+@Table(name = "FIDE_FORMACION_ACADEMICA_V")
 public class FormacionAcademicaView {
 
     @Id
