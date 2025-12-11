@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "FIDE_ACTIVIDAD_GRUPO_VW")
+@Table(name = "FIDE_ACTIVIDAD_GRUPO_V")
 public class ActividadGrupoView {
 
     @Id
