@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:replace="~{layout :: head(${titulo})}"></head>
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+    <th:block th:fragment="content">
+
+        <h1 class="mb-4" th:text="${titulo}"></h1>
+
+        <div th:if="${#lists.isEmpty(datos)}" class="alert alert-warning">
+            No se encontraron registros de auditoría.
+        </div>
+
+        <div class="resultado-container">
+
+            <div th:each="row : ${datos}" class="card shadow p-4 mb-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">
+                        Registro ID: <span th:text="${row.ID_AUDITORIA}"></span>
+                    </h5>
+
+                    <span th:class="${row.ACCION == 'INSERT' ? 'badge bg-success' :
+                                    row.ACCION == 'UPDATE' ? 'badge bg-warning' :
+                                    'badge bg-danger'}">
+                        <span th:text="${row.ACCION}"></span>
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <tbody>
+                        <tr th:each="entry : ${row}">
+                            <th style="min-width: 220px; text-transform: capitalize;"
+                                th:text="${entry.key.toLowerCase().replace('_',' ')}">
+                            </th>
+
+                            <td style="white-space: normal; word-break: break-word;"
+                                th:text="${entry.value}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+        <a th:href="@{/auditoria}" class="btn btn-secondary mt-4">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Menú
+        </a>
+
+        <style>
+            .badge {
+                font-size: 0.9em;
+                padding: 0.4em 0.8em;
+            }
+        </style>
+
+    </th:block>
+
+</div>
+
+</body>
+</html>
