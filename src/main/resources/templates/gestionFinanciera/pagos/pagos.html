@@ -64,10 +64,10 @@
                                 <td th:text="${p.montoTotal}"></td>
                                 <td th:text="${p.estado}"></td>
                                 <td>
-                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    <button th:if="${rol == 'ADMINISTRADOR'}" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modalEliminar"
                                         th:attr="data-id=${p.idPago}, data-idfactura=${p.idFactura}">
-                                        Eliminar
+                                        Eliminar 
                                     </button>
                                 </td>
                             </tr>
